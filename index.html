@@ -1,0 +1,1161 @@
+<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trainer Zuordnungen</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-title" content="Zuordnungen">
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f5f7;color:#171717}.topnav{background:white;border-bottom:1px solid #bbb;padding:12px max(18px,calc(50vw - 510px));position:sticky;top:0;z-index:5}h1{font-size:22px;margin:0 16px 0 0}button{font:inherit;border:1px solid #777;border-radius:9px;background:white;padding:10px 14px;cursor:pointer}.active,.primary{background:#222;color:white}.disabled{opacity:.45}main{max-width:1050px;margin:22px auto;padding:0 15px}.panel{background:white;border:1px solid #bbb;border-radius:14px;padding:22px}.intro{font-size:17px;line-height:1.45}.progress{font-weight:bold;margin:18px 0 10px}.values{border-collapse:collapse;width:min(760px,100%);font-size:20px;margin:12px 0 24px}.values td{border:2px solid #333;padding:12px;text-align:center;min-width:80px}.values td:first-child{font-weight:bold;min-width:55px}.step{border-top:1px solid #ddd;margin-top:18px;padding-top:18px}.step h2{font-size:19px}.choices{display:flex;gap:10px;flex-wrap:wrap}.choice.selected{background:#dce8fb;border:2px solid #2b5dab}.choice.correct{background:#e8f5e9;border:2px solid #398744}.choice.wrong{background:#ffebee;border:2px solid #b53a45}.hidden{display:none}.calc{display:grid;grid-template-columns:175px repeat(4,1fr);gap:8px;align-items:center;max-width:900px}.calc input{width:100%;padding:9px;font:inherit;text-align:center;border:1px solid #777;border-radius:7px}
+.input-wrap{display:flex;gap:4px;align-items:stretch;min-width:0}
+.input-wrap input{min-width:0;flex:1}
+.comma-btn{padding:7px 10px;font-size:20px;font-weight:bold;border-radius:7px;background:#f2f2f2;flex:0 0 auto}.formula{font-weight:bold}.factor-label{white-space:normal;line-height:1.2;min-width:175px;overflow:visible}.head{text-align:center;font-weight:bold}.feedback{margin-top:14px;padding:12px;border-radius:8px;font-weight:bold}.ok{background:#e8f5e9}.bad{background:#ffebee}.actions{margin-top:16px;display:flex;gap:10px}.small{font-size:14px;color:#555}
+#trendStep{padding-top:10px;margin-top:10px}
+#guessStep,#methodStep{padding-top:7px;margin-top:7px}
+#guessStep h2,#methodStep h2{margin-top:0;margin-bottom:8px}
+#trendStep h2{margin:0 0 8px}
+.trend-row{display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
+.trend-row .choice{padding:8px 10px;white-space:nowrap}
+.trend-row #checkTrend{padding:8px 13px;flex:0 0 auto}
+#trendFb{margin:0;flex:0 0 auto}
+#trendFb.feedback{padding:8px 10px}
+.method-row{display:flex;gap:8px;align-items:center;flex-wrap:nowrap}
+.method-row .choices{margin:0}
+.method-row #checkMethod{padding:8px 13px;flex:0 0 auto}
+#methodFbInline{margin:0;flex:1 1 auto;font-size:14px;white-space:nowrap;min-width:0}
+#methodFbInline.feedback{padding:8px 10px}
+@media(max-width:900px){
+ .trend-row{flex-wrap:wrap}
+ .trend-row .choice{white-space:normal}
+}.summary{text-align:center;padding:30px}.big{font-size:46px;font-weight:bold}
+
+#valueTrainer{max-width:920px}
+.vtype{font-size:22px;font-weight:800;margin:2px 0 10px}
+.vHint{margin:0 0 10px;color:#444}
+.vtable{border-collapse:collapse;width:100%;table-layout:fixed;font-size:22px}
+.vtable th,.vtable td{border:1px solid #777;text-align:center;padding:10px}
+.vtable th{width:80px;background:#f5f5f5}
+.vtable input{width:90%;max-width:130px;font:inherit;text-align:center;padding:7px;border:2px solid #777;border-radius:8px;box-sizing:border-box}
+.vtable input:disabled{background:#f2f2f2;color:#777;cursor:not-allowed}
+.vtable input.correct{border-color:#2f8b4b;background:#edf8f0}
+.vtable input.wrong{border-color:#b83232;background:#fff0f0}
+.kRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
+.kRow input{width:100px;font:inherit;text-align:center;padding:7px;border:2px solid #777;border-radius:8px}
+#kFb.feedback{margin:0;padding:8px 10px}
+.vActions{display:flex;align-items:center;gap:10px;margin-top:12px}
+#vFb.feedback{margin:0;padding:8px 10px}
+
+/* Freundlicher Petrolton für aktive und primäre Bedienelemente */
+button.primary,
+.topnav button.active,
+.choice.selected{
+  background:#167c80 !important;
+  border-color:#167c80 !important;
+  color:#fff !important;
+}
+button.primary:hover,
+.topnav button.active:hover{
+  background:#126b6f !important;
+  border-color:#126b6f !important;
+}
+
+.kLabel{display:flex;align-items:center;gap:6px}
+.kLabel .input-wrap{display:inline-flex;align-items:center;gap:4px}
+.kLabel .comma-btn{min-width:34px;padding:7px 9px}
+.vtable .input-wrap{display:inline-flex;align-items:center;justify-content:center;gap:4px;width:100%}
+.vtable .comma-btn{min-width:32px;padding:7px 8px}
+.comma-btn:disabled{opacity:.45;cursor:not-allowed}
+
+.vTypeRow{display:flex;align-items:center;gap:12px;margin-bottom:4px}
+.vTypeRow .vtype{margin:2px 0 6px}
+.helpBtn{background:#e84f9a;color:#fff;border:2px solid #e84f9a;border-radius:9px;padding:7px 14px;font-weight:800;cursor:pointer}
+.helpBtn:hover{background:#d83f8a;border-color:#d83f8a}
+.helpOverlay{position:fixed;inset:0;background:rgba(0,0,0,.38);display:flex;align-items:center;justify-content:center;padding:20px;z-index:1000}
+.helpOverlay.hidden{display:none}
+.helpPopup{position:relative;background:#fff;border-radius:16px;max-width:620px;width:100%;padding:24px 28px;box-shadow:0 12px 40px rgba(0,0,0,.25)}
+.helpPopup h2{margin:0 0 12px;color:#b52d78}
+.helpPopup p{font-size:18px;line-height:1.45;margin:9px 0}
+.helpPopup .example{background:#f8eef4;border-radius:10px;padding:10px 12px;margin-top:12px}
+.helpClose{position:absolute;right:12px;top:8px;border:0;background:transparent;font-size:30px;line-height:1;cursor:pointer;color:#555}
+
+.dTitle{margin:0 0 4px}.dIntro{margin:0 0 12px}
+.dLayout{display:grid;grid-template-columns:minmax(250px,310px) minmax(0,1fr);gap:18px;align-items:start}
+.dTable{border-collapse:collapse;width:100%;font-size:18px}
+.dTable th,.dTable td{border:2px solid #555;padding:10px;text-align:center}
+.dTable th{background:#eaf5f5}
+.dGraph{min-width:0}#dCanvas{display:block;width:100%;height:auto;max-width:760px;background:#fff;border:1px solid #aaa;touch-action:manipulation}
+.dHint{font-size:14px;color:#555;margin:5px 0 0}.dShapeCheck{margin:12px 0 4px;padding:12px 14px;background:#f3f8f8;border:1px solid #b8d6d7;border-radius:10px}.dShapeCheck p{margin:0 0 8px}.dShapeCheck label{display:inline-flex;align-items:center;gap:6px;margin:4px 16px 4px 0;font-weight:700}.dShapeCheck input{width:18px;height:18px;accent-color:#167c80}.dActions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+@media(max-width:760px){.dLayout{grid-template-columns:1fr}.dTable{max-width:440px}}
+
+#dClearPoints{background:#fff;color:#167c80;border:2px solid #167c80;border-radius:9px;padding:8px 13px;font-weight:700;cursor:pointer}
+
+.recognizeSubnav{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 12px}
+.subMode{background:#fff;color:#167c80;border:2px solid #167c80;border-radius:10px;padding:8px 15px;font-weight:700;cursor:pointer}
+.subMode.active{background:#167c80;color:#fff}
+
+.recognizeSubnav.hidden{display:none !important}
+.rStory{font-size:20px;line-height:1.45;background:#f3f8f8;border-left:5px solid #167c80;padding:14px 16px;border-radius:8px;margin-bottom:12px}.rBlock{margin-top:12px}.rLine{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin:10px 0}.rLine label{display:flex;gap:6px;align-items:center}.rLine select{font-size:16px;padding:7px;border-radius:7px}.rType{background:#fff;color:#167c80;border:2px solid #167c80;border-radius:9px;padding:8px 12px;font-weight:700}.rType.selected{background:#167c80;color:#fff}.rGrid{display:flex;gap:20px;align-items:center;flex-wrap:wrap}.rTable{border-collapse:collapse;font-size:18px}.rTable th,.rTable td{border:2px solid #555;padding:9px 12px;text-align:center;min-width:150px}.rTable th{background:#eaf5f5}.rTable input{width:105px;font-size:18px;text-align:center;padding:7px}.rOps{display:flex;flex-direction:column;gap:34px;color:#167c80;font-size:26px}.rOps label{font-size:16px;color:#222;font-weight:700}.rOps input{width:150px;font-size:17px;padding:7px}
+.rTriple{display:grid;grid-template-columns:190px auto 190px;gap:12px;align-items:stretch;width:max-content;max-width:100%;margin-top:10px}
+.rSide{display:grid;grid-template-rows:1fr 1fr;height:100%;padding-top:42px}
+.rArcBox{position:relative;display:flex;align-items:center;justify-content:center;min-height:78px}
+.rArcShape{font-size:46px;line-height:1;color:#167c80;transform:rotate(18deg)}
+.rLeft .rArcShape{transform:scaleX(-1) rotate(18deg)}
+.rMini{display:flex;align-items:center;gap:4px}
+.rMini select{width:46px;font-size:20px;padding:4px;border:1px solid #888;border-radius:6px;text-align:center}
+.rMini input{width:54px;font-size:17px;padding:5px;text-align:center;border:1px solid #888;border-radius:6px}
+.rTable input:disabled{background:#fff}
+@media(max-width:760px){.rTriple{grid-template-columns:125px auto 125px}.rSide{padding-top:42px}.rArcShape{font-size:36px}.rMini input{width:42px}}
+
+.rLeft .rArcBox{justify-content:flex-end}.rRight .rArcBox{justify-content:flex-start}
+.rLeft .rArcShape{transform:scaleX(-1) rotate(18deg);margin-left:5px}.rRight .rArcShape{margin-right:5px}
+.rComma{width:28px;height:32px;padding:0;border:1px solid #167c80;border-radius:6px;background:#fff;color:#167c80;font-size:20px;font-weight:700;cursor:pointer}
+.rAnswer{margin-top:15px;padding-top:12px;border-top:1px solid #ccc}.rAnswer>label{display:flex;gap:9px;align-items:center;flex-wrap:wrap}.rAnswer input{min-width:430px;max-width:100%;font-size:17px;padding:8px;border:1px solid #999;border-radius:7px}
+#rCommaGlobal{width:34px;height:34px;font-size:21px;padding:0}.rAnswerCell{border:4px solid #167c80 !important;box-shadow:0 0 0 2px rgba(22,124,128,.14) inset}.rAutoAnswer{margin-top:12px;padding:11px 14px;border:2px solid #167c80;border-radius:9px;background:#f3f8f8;font-size:18px;font-weight:700}</style>
+
+
+<style id="rFeedbackAlignV47">
+#rFb0{display:inline-flex;align-items:center;margin:0;line-height:1.2;vertical-align:middle}
+#rCheck0{vertical-align:middle}
+</style>
+
+<style id="ratioCss">
+.qEquation{display:flex;align-items:center;gap:18px;margin:18px 0;font-size:24px;width:max-content}
+.qFrac{display:grid;grid-template-rows:auto auto;min-width:118px;text-align:center}
+.qFrac>div{min-height:52px;display:flex;align-items:center;justify-content:center;padding:4px 10px}
+.qFrac>div:first-child{border-bottom:3px solid #222}
+.qFrac input{width:82px;font-size:21px;text-align:center;padding:6px;border:1px solid #888;border-radius:7px}
+.qXmark{font-size:28px;font-weight:800;color:#167c80}
+.qEq{font-size:30px;font-weight:700}
+.qReciprocal{background:#fff;border:2px solid #167c80;color:#167c80;border-radius:9px;padding:9px 13px;font-weight:700;cursor:pointer}
+.qReciprocal.done{background:#167c80;color:#fff}
+.qEqHint{margin-top:8px;font-weight:700;color:#167c80}
+.qResultLine input{width:90px;font-size:20px;padding:6px;text-align:center}
+</style>
+
+<style id="ratioSelectionV49">
+#ratioTrainer .qType.selected{
+  background:#167c80 !important;
+  border-color:#167c80 !important;
+  color:#fff !important;
+}
+#ratioTrainer .qType:not(.selected){
+  background:#fff;
+  color:#222;
+}
+#ratioTrainer .qEquation input::placeholder{font-size:13px;color:#888}
+</style>
+<style id="levelCss">
+.levelRow{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:10px}
+.levelRow strong{margin-right:4px}
+.levelBtn{border:2px solid #167c80;color:#167c80;background:#fff;font-weight:800}
+.levelBtn.active{background:#167c80;color:#fff;border-color:#167c80}
+.modeRow{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+header.brand{background:#12365b;color:white;padding:25px max(20px,calc(50vw - 510px));display:flex;align-items:center;gap:18px}
+header.brand h1{margin:0 0 5px;font-size:29px}header.brand p{margin:0}
+.logo{width:64px;height:64px;border-radius:15px;flex-shrink:0;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+@media(max-width:560px){.logo{width:48px;height:48px;border-radius:11px}header.brand h1{font-size:24px}}
+footer{max-width:1050px;margin:10px auto 26px;padding:0 15px;text-align:right;color:#555;font-size:14px}
+</style>
+</head><body>
+<header class="brand"><img class="logo" src="apple-touch-icon.png" alt=""><div><h1>Trainer Zuordnungen</h1><p>Emil-Petri-Schule Arnstadt</p></div></header>
+<nav class="topnav"><div class="levelRow"><strong>Stufe:</strong><button id="levelSupportBtn" class="levelBtn active" type="button">Lernförderstufe</button><button id="levelRegularBtn" class="levelBtn" type="button">Regelschulstufe</button></div><div class="modeRow"><button id="mode1Btn" class="active">1 · Zuordnungen erkennen</button><button id="mode2Btn">2 · Wertetabellen ergänzen</button><button id="mode3Btn">3 · Dreisatz</button><button id="mode4Btn">4 · Verhältnisgleichung</button></div></nav>
+<main><div id="recognizeSubnav" class="recognizeSubnav">
+  <button id="subTableBtn" class="subMode active" type="button">aus der Wertetabelle</button>
+  <button id="subDiagramBtn" class="subMode" type="button">aus dem Diagramm</button>
+</div>
+<section id="trainer" class="panel"><div id="tbl"></div>
+<div class="step" id="trendStep"><h2>1. Verhalten der Größen</h2>
+<div class="trend-row">
+<div class="choices" id="trendChoices">
+<button class="choice" data-v="same">Ausgangsgröße ↗ → zugeordnete Größe ↗</button>
+<button class="choice" data-v="opposite">Ausgangsgröße ↗ → zugeordnete Größe ↘</button>
+</div>
+<button id="checkTrend" class="primary">Prüfen</button>
+<div id="trendFb"></div>
+</div>
+</div>
+<div id="guessStep" class="step hidden"><h2>2. Vermutung</h2><div class="choices" id="guess"><button class="choice" data-v="prop">proportional</button><button class="choice" data-v="anti">antiproportional</button></div><p class="small">Eine Vermutung darf falsch sein – entscheidend ist die Prüfung.</p></div>
+<div id="methodStep" class="step hidden">
+<h2>3. Rechenweg wählen</h2>
+<p>Was musst du berechnen, um deine Vermutung zu prüfen?</p>
+<div class="method-row">
+<div class="choices" id="methodChoices">
+<button class="choice" data-v="product">x · y</button>
+<button class="choice" data-v="quotient">y : x</button>
+</div>
+<button id="checkMethod" class="primary">Prüfen</button>
+<div id="methodFbInline"></div>
+</div>
+<div id="methodFb" style="display:none"></div>
+</div>
+<div id="calcStep" class="step hidden"><h2>4. Rechnerisch prüfen</h2><p class="small"><strong>Hinweis:</strong> Wenn der Proportionalitätsfaktor mehr als zwei Nachkommastellen hat, dann runde auf die zweite Stelle nach dem Komma.</p><div id="calc" class="calc"></div></div>
+<div id="decStep" class="step hidden"><h2>5. Entscheidung</h2><p>Was zeigt deine Rechnung?</p><div class="choices" id="dec"><button class="choice" data-v="prop">proportionale Zuordnung</button><button class="choice" data-v="anti">antiproportionale Zuordnung</button><button class="choice" data-v="neither">weder proportional noch antiproportional</button></div><div class="actions"><button id="checkDec" class="primary">Entscheidung prüfen</button></div><div id="decFb"></div></div>
+</section>
+<section id="valueTrainer" class="panel hidden">
+  
+  <div class="vTypeRow"><div id="vType" class="vtype"></div><button type="button" id="helpBtn" class="helpBtn hidden">Hilfe</button></div>
+  <div class="kRow"><strong>Proportionalitätsfaktor bestimmen:</strong><label class="kLabel">k = <span class="input-wrap"><input id="kInput" inputmode="decimal"><button type="button" class="comma-btn" data-comma-for="kInput">,</button></span></label><button id="kCheck" class="primary">Prüfen</button><span id="kFb"></span></div>
+  <div id="vTable"></div>
+  <div id="vFill" class="hidden">
+    <p class="vHint">Ergänze jetzt die beiden fehlenden Werte.</p>
+    <div class="vActions"><button id="vCheck" class="primary">Prüfen</button><span id="vFb"></span><button id="vNext" class="primary hidden">Neue Aufgabe</button></div>
+  </div>
+</section>
+<section id="diagramTrainer" class="panel hidden">
+  <h2 class="dTitle">Diagramme</h2>
+  <p class="dIntro">Übertrage die vier Wertepaare aus der Wertetabelle als Punkte in das Koordinatensystem.</p>
+  <div class="dLayout">
+    <div id="dTable"></div>
+    <div class="dGraph">
+      <canvas id="dCanvas" width="760" height="500" aria-label="Koordinatensystem"></canvas>
+      <p class="dHint">Tippe oder klicke auf die passende Stelle. Die Punkte rasten an den vorgegebenen Werten ein.</p>
+    </div>
+  </div>
+  <div class="dActions"><button id="dCheckPoints" class="primary">Punkte prüfen</button><button id="dClearPoints" type="button">Punkte löschen</button><span id="dPointFb"></span></div>
+  <div id="dDecision" class="hidden">
+    <h2>Entscheidung</h2>
+    <div id="dShapeStep" class="dShapeCheck">
+      <p><strong>Prüfe zuerst die Form des Graphen:</strong></p>
+      <label><input type="checkbox" name="dShape" value="line"> Gerade durch den Koordinatenursprung</label>
+      <label><input type="checkbox" name="dShape" value="hyperbola"> Hyperbel</label>
+      <label><input type="checkbox" name="dShape" value="neither"> weder noch</label>
+      <div class="dActions"><button id="dCheckShape" class="primary" type="button">Form prüfen</button><span id="dShapeFb"></span></div>
+    </div>
+    <div id="dTypeStep" class="hidden">
+    <p>Welche Zuordnung liegt vor?</p>
+    <div class="choices" id="dChoices">
+      <button class="choice" data-v="prop">proportionale Zuordnung</button>
+      <button class="choice" data-v="anti">antiproportionale Zuordnung</button>
+      <button class="choice" data-v="neither">weder proportional noch antiproportional</button>
+    </div>
+    <div class="dActions"><button id="dCheckDecision" class="primary">Entscheidung prüfen</button><span id="dDecisionFb"></span><button id="dNext" class="primary hidden">Neue Aufgabe</button></div>
+    </div>
+  </div>
+</section>
+<section id="ruleThreeTrainer" class="panel hidden">
+<h2>Dreisatz</h2><div id="rStory" class="rStory"></div>
+<div class="rBlock"><p><strong>1. Größen und Zuordnungsart bestimmen</strong></p>
+<div class="rLine"><label>Ausgangsgröße: <select id="rX"><option value="">– auswählen –</option></select></label><label>zugeordnete Größe: <select id="rY"><option value="">– auswählen –</option></select></label></div>
+<div class="rLine"><button class="rType" data-v="prop">proportional</button><button class="rType" data-v="anti">antiproportional</button><button id="rCheck0" class="primary">Prüfen</button><span id="rFb0" class="feedback"></span></div></div>
+<div id="rWork" class="rBlock hidden">
+  <p><strong>2. Dreisatztabelle</strong> – Fülle die Tabelle vollständig aus und trage an jedem Bogen die Rechenoperation ein.</p>
+  <div class="rTriple">
+    <div class="rSide rLeft">
+      <div class="rArcBox"><div class="rMini"><select id="rL1op"><option value="">?</option><option value="mul">·</option><option value="div">:</option></select><input id="rL1n" inputmode="decimal"></div><div class="rArcShape">⤵</div></div>
+      <div class="rArcBox"><div class="rMini"><select id="rL2op"><option value="">?</option><option value="mul">·</option><option value="div">:</option></select><input id="rL2n" inputmode="decimal"></div><div class="rArcShape">⤵</div></div>
+    </div>
+    <table class="rTable"><thead><tr><th id="rHX"></th><th id="rHY"></th></tr></thead><tbody>
+      <tr><td><input id="r11" inputmode="decimal"></td><td><input id="r12" inputmode="decimal"></td></tr>
+      <tr><td><input id="r21" inputmode="decimal"></td><td><input id="r22" inputmode="decimal"></td></tr>
+      <tr><td><input id="r31" inputmode="decimal"></td><td><input id="r32" inputmode="decimal"></td></tr>
+    </tbody></table>
+    <div class="rSide rRight">
+      <div class="rArcBox"><div class="rArcShape">⤵</div><div class="rMini"><select id="rR1op"><option value="">?</option><option value="mul">·</option><option value="div">:</option></select><input id="rR1n" inputmode="decimal"></div></div>
+      <div class="rArcBox"><div class="rArcShape">⤵</div><div class="rMini"><select id="rR2op"><option value="">?</option><option value="mul">·</option><option value="div">:</option></select><input id="rR2n" inputmode="decimal"></div></div>
+    </div>
+  </div>
+  <div class="rLine"><button id="rCheckTable" class="primary">Tabelle prüfen</button><button id="rCommaGlobal" type="button" class="rComma" title="Komma in das zuletzt gewählte Zahlenfeld einfügen">,</button><span id="rTableFb" class="feedback"></span><button id="rNext" class="primary hidden">Neue Aufgabe</button></div><div id="rAutoAnswer" class="rAutoAnswer hidden"></div>
+</div></section>
+<section id="ratioTrainer" class="panel hidden">
+  <h2>Verhältnisgleichung</h2>
+  <div id="qStory" class="rStory" style="margin-top:12px"></div>
+  <div class="rBlock">
+    <p><strong>1. Größen und Zuordnungsart bestimmen</strong></p>
+    <div class="rLine">
+      <label>Ausgangsgröße: <select id="qX"></select></label>
+      <label>zugeordnete Größe: <select id="qY"></select></label>
+    </div>
+    <div class="rLine">
+      <button class="qType" data-v="prop">proportional</button>
+      <button class="qType" data-v="anti">antiproportional</button>
+      <button id="qCheck0" class="primary">Prüfen</button>
+      <span id="qFb0" class="feedback"></span>
+    </div>
+  </div>
+  <div id="qWork" class="rBlock hidden">
+    <p><strong>2. Verhältnisgleichung</strong></p>
+    <p>Trage die drei bekannten Werte ein und setze selbst <strong>x</strong> an die gesuchte Stelle.</p>
+    <div class="qEquation">
+      <div class="qFrac"><div id="qABox"></div><div id="qBBox"></div></div>
+      <div class="qEq">=</div>
+      <div id="qRightFrac" class="qFrac"><div id="qCBox"></div><div id="qDBox"></div></div>
+    </div>
+    <button id="qReciprocal" type="button" class="qReciprocal hidden">Kehrwert des rechten Bruches bilden</button>
+    <div id="qEqHint" class="qEqHint"></div>
+    <div class="rLine qResultLine">
+      <label><strong>x =</strong> <input id="qResult" inputmode="decimal" autocomplete="off"></label>
+      <button id="qComma" type="button" class="rComma">,</button>
+      <button id="qCheck" class="primary">Prüfen</button>
+      <span id="qFb" class="feedback"></span>
+      <button id="qNext" class="primary hidden">Neue Aufgabe</button>
+    </div>
+    <div id="qAutoAnswer" class="rAutoAnswer hidden"></div>
+  </div>
+</section>
+
+</main>
+<footer>Erstellt von Marion Klugmann (Oktober 2026) mit freundlicher Unterstützung von Claude.</footer>
+<div id="helpOverlay" class="helpOverlay hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
+  <div class="helpPopup">
+    <button type="button" id="helpClose" class="helpClose" aria-label="Hilfe schließen">×</button>
+    <h2 id="helpTitle">Tipp</h2>
+    <div id="helpText"></div>
+  </div>
+</div>
+
+<script>
+const tasks=[
+{x:[18,42,75,108],y:[63,147,262.5,378],type:'prop'},
+{x:[16,24,45,72],y:[189,126,67.2,42],type:'anti'},
+{x:[14,32,55,86],y:[52.5,120,206.25,322.5],type:'prop'},
+{x:[12,27,48,90],y:[360,160,90,48],type:'anti'},
+{x:[22,38,64,95],y:[77,133,224,334.5],type:'neither'},
+{x:[25,40,64,100],y:[288,180,112.5,72],type:'anti'},
+{x:[36,54,78,125],y:[153,229.5,331.5,531.25],type:'prop'},
+{x:[15,28,44,70],y:[96,51.43,32.73,24],type:'neither'},
+{x:[24,35,68,92],y:[81.6,119,231.2,312.8],type:'prop'},
+{x:[18,30,50,75],y:[250,150,90,60],type:'anti'},
+/* Fallen-Aufgaben: Die ersten drei Paare passen exakt, erst das letzte weicht leicht ab. */
+{x:[12,25,48,70],y:[48,100,192,420],type:'neither'},       /* y:x = 4,4,4,6 */
+{x:[18,32,55,80],y:[108,192,330,640],type:'neither'},      /* y:x = 6,6,6,8 */
+{x:[10,20,24,30],y:[12,6,5,4.2],type:'neither'},           /* x*y = 120,120,120,126 */
+{x:[12,15,20,30],y:[10,8,6,4.4],type:'neither'},
+{x:[21,36,58,84],y:[73.5,126,203,294],type:'prop'},
+{x:[14,25,40,70],y:[180,100.8,63,36],type:'anti'},
+{x:[32,48,75,110],y:[88,132,206.25,302.5],type:'prop'},
+{x:[18,27,45,81],y:[270,180,108,60],type:'anti'},
+{x:[26,44,68,96],y:[91,154,238,342],type:'neither'},
+{x:[16,30,54,90],y:[104,195,351,675],type:'neither'},
+{x:[20,35,60,85],y:[84,147,252,442],type:'neither'},
+{x:[24,40,64,96],y:[150,90,56.25,37.5],type:'anti'},
+{x:[28,46,72,105],y:[119,195.5,306,446.25],type:'prop'},
+{x:[15,25,50,75],y:[240,144,72,50],type:'neither'},
+{x:[22,33,55,88],y:[132,88,52.8,34],type:'neither'},
+{x:[18,42,66,90],y:[81,189,297,495],type:'neither'},
+{x:[30,45,72,120],y:[96,64,40,25],type:'neither'},
+{x:[14,28,56,98],y:[77,154,308,637],type:'neither'}];          /* x*y = 120,120,120,132 */
+/* Kuratierter Aufgabenpool für die Lernförderstufe in Modul 1.
+   Schwerpunkt: proportional/antiproportional; "weder noch" bleibt bewusst die Ausnahme.
+   Alle Tabellenwerte und die benötigten Faktoren lassen sich ohne Kommazahlen berechnen. */
+const recognizeSupportTasks=[
+ {x:[2,4,6,9],y:[6,12,18,27],type:'prop'},
+ {x:[3,5,8,12],y:[12,20,32,48],type:'prop'},
+ {x:[4,7,10,15],y:[20,35,50,75],type:'prop'},
+ {x:[5,8,11,14],y:[30,48,66,84],type:'prop'},
+ {x:[6,9,12,15],y:[42,63,84,105],type:'prop'},
+ {x:[7,10,13,16],y:[56,80,104,128],type:'prop'},
+ {x:[8,12,16,20],y:[72,108,144,180],type:'prop'},
+ {x:[1,2,4,8],y:[64,32,16,8],type:'anti'},
+ {x:[1,3,5,15],y:[225,75,45,15],type:'anti'},
+ {x:[1,2,5,10],y:[100,50,20,10],type:'anti'},
+ {x:[1,2,3,6],y:[36,18,12,6],type:'anti'},
+ {x:[1,2,4,16],y:[256,128,64,16],type:'anti'},
+ {x:[2,4,8,16],y:[128,64,32,16],type:'anti'},
+ {x:[1,4,5,20],y:[400,100,80,20],type:'anti'},
+ {x:[10,20,30,40],y:[20,40,60,120],type:'neither'},
+ {x:[5,10,15,20],y:[15,30,45,80],type:'neither'}
+];
+let order=[...recognizeSupportTasks].sort(()=>Math.random()-.5),i=0,decision=null,score=0;
+const $=id=>document.getElementById(id), fmt=n=>String(n).replace('.',','), num=s=>parseFloat(String(s).replace(',','.'));
+/* Faktoren vergleichen: gleich, wenn sie auf zwei Nachkommastellen übereinstimmen */
+function sameF(a,b){return Math.abs(a-b)<0.005}
+function near(a,b){return Number.isFinite(a)&&Math.abs(a-b)<=.012*Math.max(1,Math.abs(b))}
+let schoolLevel='support';
+const allIntegers=a=>a.every(v=>Number.isInteger(v));
+function isSupportTask(t,kind){
+ if(kind==='recognize'){
+   if(!allIntegers([...t.x,...t.y]))return false;
+   return t.x.every((x,j)=>Number.isInteger(t.y[j]/x));
+ }
+ if(kind==='value') return allIntegers([...t.x,...t.y]) && Number.isInteger(currentK(t));
+ if(kind==='diagram') return allIntegers([...t.x,...t.y]);
+ if(kind==='story') return t.lvl? t.lvl==='support' : allIntegers(t.v);
+ return false;
+}
+function levelPool(list,kind){
+ if(kind==='recognize'){
+   if(schoolLevel==='support')return [...recognizeSupportTasks];
+   /* Regelschulstufe: Aufgaben mit Kommazahlen, alle antiproportionalen und die Fallen-Aufgaben (Index 10–13) */
+   return list.filter((t,k)=>!allIntegers([...t.x,...t.y])||t.type==='anti'||(k>=10&&k<=13));
+ }
+ return list.filter(t=>schoolLevel==='support'?isSupportTask(t,kind):!isSupportTask(t,kind));
+}
+function resetForLevel(){
+ order=levelPool(tasks,'recognize').sort(()=>Math.random()-.5);i=0;decision=null;
+ vOrder=[];vi=0; dOrder=[];dIndex=0; rq=[];ri=0; qq=[];qi=0;
+ const active=['mode1Btn','mode2Btn','mode3Btn','mode4Btn'].find(id=>$(id).classList.contains('active'))||'mode1Btn';
+ if(active==='mode1Btn'){render(); if($('subDiagramBtn').classList.contains('active')){$('subDiagramBtn').click();}}
+ else $(active).click();
+}
+function setSchoolLevel(level){
+ schoolLevel=level;
+ $('levelSupportBtn').classList.toggle('active',level==='support');
+ $('levelRegularBtn').classList.toggle('active',level==='regular');
+ resetForLevel();
+}
+$('levelSupportBtn').onclick=()=>setSchoolLevel('support');
+$('levelRegularBtn').onclick=()=>setSchoolLevel('regular');
+function render(){let t=order[i];decision=null;$('tbl').innerHTML=`<table class="values"><tr><td>x</td>${t.x.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr><tr><td>y</td>${t.y.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr></table>`;document.querySelectorAll('.choice').forEach(b=>b.classList.remove('selected','correct','wrong'));$('guessStep').classList.add('hidden');$('methodStep').classList.add('hidden');$('calcStep').classList.add('hidden');$('decStep').classList.add('hidden');$('trendFb').innerHTML='';$('methodFb').innerHTML='';$('methodFbInline').innerHTML='';$('methodFbInline').className='';$('decFb').innerHTML='';window.currentTrend=null;window.currentGuess=null;window.currentMethod=null;$('calc').innerHTML=`<div></div>${t.x.map((_,j)=>`<div class="head">Spalte ${j+1}</div>`).join('')}<div class="formula factor-label">Proportionalitäts-<br>faktor</div>${t.x.map((_,j)=>`<div class="input-wrap"><input inputmode="decimal" data-i="${j}"><button type="button" class="comma-btn" aria-label="Komma eingeben">,</button></div>`).join('')}`}
+
+$('trendChoices').onclick=e=>{
+  let b=e.target.closest('.choice');if(!b)return;
+  window.currentTrend=b.dataset.v;
+  [...$('trendChoices').children].forEach(x=>x.classList.toggle('selected',x===b));
+  $('trendFb').innerHTML='';
+};
+$('checkTrend').onclick=()=>{
+  if(!window.currentTrend){
+    $('trendFb').className='feedback bad';
+    $('trendFb').textContent='Wähle zuerst eine Aussage aus.';
+    return;
+  }
+  let t=order[i];
+  let actual=t.y[t.y.length-1]>t.y[0]?'same':'opposite';
+  let ok=window.currentTrend===actual;
+  [...$('trendChoices').children].forEach(b=>{
+    b.classList.remove('correct','wrong');
+    if(b.dataset.v===window.currentTrend)b.classList.add(ok?'correct':'wrong');
+  });
+  if(ok){
+    $('trendFb').className='feedback ok';
+    $('trendFb').textContent='Richtig.';
+    $('guessStep').classList.remove('hidden');
+  }else{
+    $('trendFb').className='feedback bad';
+    $('trendFb').textContent='Schau noch einmal auf die Werte in der Tabelle.';
+    $('guessStep').classList.add('hidden');
+    $('methodStep').classList.add('hidden');
+    $('calcStep').classList.add('hidden');
+    $('decStep').classList.add('hidden');
+  }
+};
+$('guess').onclick=e=>{let b=e.target.closest('.choice');if(!b)return;window.currentGuess=b.dataset.v;[...$('guess').children].forEach(x=>x.classList.toggle('selected',x===b));$('methodStep').classList.remove('hidden');$('calcStep').classList.add('hidden');$('decStep').classList.add('hidden');$('methodFb').innerHTML='';$('methodFbInline').innerHTML='';$('methodFbInline').className='';window.currentMethod=null;document.querySelectorAll('#methodChoices .choice').forEach(x=>x.classList.remove('selected','correct','wrong'))};
+
+$('methodChoices').onclick=e=>{
+  let b=e.target.closest('.choice');if(!b)return;
+  window.currentMethod=b.dataset.v;
+  [...$('methodChoices').children].forEach(x=>x.classList.toggle('selected',x===b));
+  $('methodFb').innerHTML='';$('methodFbInline').innerHTML='';$('methodFbInline').className='';
+};
+$('checkMethod').onclick=()=>{
+  if(!window.currentMethod){
+    $('methodFbInline').className='feedback bad';
+    $('methodFbInline').textContent='Wähle zuerst einen Rechenweg.';
+    return;
+  }
+  const expected=window.currentGuess==='prop'?'quotient':'product';
+  const ok=window.currentMethod===expected;
+  [...$('methodChoices').children].forEach(b=>{
+    b.classList.remove('correct','wrong');
+    if(b.dataset.v===window.currentMethod)b.classList.add(ok?'correct':'wrong');
+  });
+  if(!ok){
+    $('methodFbInline').className='feedback bad';
+    $('methodFbInline').textContent=window.currentGuess==='prop'?'Richtig: y : x. Damit prüfst du auf Quotientengleichheit.':'Richtig: x · y. Damit prüfst du auf Produktgleichheit.';
+    $('calcStep').classList.add('hidden');
+    $('decStep').classList.add('hidden');
+    return;
+  }
+  $('methodFbInline').className='feedback ok';
+  $('methodFbInline').innerHTML=expected==='quotient'
+    ?'Richtig: <strong>y : x</strong>. Damit prüfst du auf <strong>Quotientengleichheit</strong>.'
+    :'Richtig: <strong>x · y</strong>. Damit prüfst du auf <strong>Produktgleichheit</strong>.';
+  $('calcStep').classList.remove('hidden');
+  $('decStep').classList.remove('hidden');
+};
+$('calc').onclick=e=>{
+  const b=e.target.closest('.comma-btn');
+  if(!b)return;
+  const inp=b.parentElement.querySelector('input');
+  if(!inp.value.includes(',')&&!inp.value.includes('.')){
+    const start=inp.selectionStart??inp.value.length;
+    const end=inp.selectionEnd??inp.value.length;
+    inp.value=inp.value.slice(0,start)+','+inp.value.slice(end);
+    inp.focus();
+    try{inp.setSelectionRange(start+1,start+1)}catch(_){}
+  }else{
+    inp.focus();
+  }
+};
+$('dec').onclick=e=>{let b=e.target.closest('.choice');if(!b)return;decision=b.dataset.v;[...$('dec').children].forEach(x=>x.classList.toggle('selected',x===b))};
+$('checkDec').onclick=()=>{
+ if(!decision){$('decFb').className='feedback bad';$('decFb').textContent='Triff zuerst eine Entscheidung.';return}
+ let t=order[i], inputs=[...document.querySelectorAll('#calc input')], entered=inputs.map(inp=>inp.value.trim());
+ let filled=entered.map((v,j)=>({j,v})).filter(o=>o.v!=='');
+ if(filled.length<2){
+   $('decFb').className='feedback bad';
+   $('decFb').textContent='Berechne mindestens die Proportionalitätsfaktoren der ersten beiden Spalten.';
+   return;
+ }
+ let factors=t.x.map((x,j)=>window.currentMethod==='product'?x*t.y[j]:t.y[j]/x);
+ let calculationsOK=true;
+ filled.forEach(({j,v})=>{
+   let ok=near(num(v),factors[j]);
+   inputs[j].style.background=ok?'#e8f5e9':'#ffebee';
+   if(!ok)calculationsOK=false;
+ });
+ if(!calculationsOK){
+   $('decFb').className='feedback bad';
+   $('decFb').textContent='Mindestens ein eingetragener Proportionalitätsfaktor stimmt noch nicht. Prüfe die rot markierten Felder.';
+   return;
+ }
+
+ /* If the first two correctly calculated factors already differ, the conjecture
+    has been disproved and the learner may stop calculating further columns. */
+ let firstTwoFilled=entered[0]!==''&&entered[1]!=='';
+ let firstTwoDiffer=firstTwoFilled&&!sameF(factors[0],factors[1]);
+
+ /* For a positive classification, all four factors must be calculated and equal. */
+ if(decision===window.currentGuess && filled.length<4){
+   $('decFb').className='feedback bad';
+   $('decFb').textContent='Wenn du deine Vermutung bestätigen möchtest, prüfe bitte alle vier Spalten.';
+   return;
+ }
+
+ let accepted=false, explanation='';
+ const trend=t.y[t.y.length-1]>t.y[0]?'same':'opposite';
+ const guessFitsTrend=(trend==='same'&&window.currentGuess==='prop')||(trend==='opposite'&&window.currentGuess==='anti');
+ if(decision==='neither' && firstTwoDiffer && t.type!=='neither'){
+   $('decFb').className='feedback bad';
+   $('decFb').innerHTML='Deine Vermutung ist widerlegt – daraus folgt aber noch nicht „weder noch“. Wähle oben bei <strong>2. Vermutung</strong> die andere Zuordnungsart und prüfe noch einmal.';
+   return;
+ }
+ if(decision==='neither' && firstTwoDiffer && !guessFitsTrend){
+   $('decFb').className='feedback bad';
+   $('decFb').innerHTML=trend==='same'
+     ?'Die Größen wachsen gemeinsam – eine antiproportionale Zuordnung war schon ausgeschlossen. Prüfe, ob eine <strong>proportionale</strong> Zuordnung vorliegt.'
+     :'Wenn die eine Größe wächst, wird die andere kleiner – eine proportionale Zuordnung war schon ausgeschlossen. Prüfe, ob eine <strong>antiproportionale</strong> Zuordnung vorliegt.';
+   return;
+ }
+ if(decision==='neither' && firstTwoDiffer){
+   accepted=true;
+   explanation=window.currentGuess==='prop'
+     ?'Schon die ersten beiden korrekt berechneten Proportionalitätsfaktoren sind verschieden. Es liegt also keine <strong>Quotientengleichheit</strong> vor. Damit ist deine Vermutung widerlegt; du musst die restlichen Spalten nicht mehr berechnen.'
+     :'Schon die ersten beiden korrekt berechneten Proportionalitätsfaktoren sind verschieden. Es liegt also keine <strong>Produktgleichheit</strong> vor. Damit ist deine Vermutung widerlegt; du musst die restlichen Spalten nicht mehr berechnen.';
+ } else if(decision===t.type){
+   if(t.type==='neither'){
+     /* For neither, any correctly entered pair with unequal factors is enough. */
+     let unequal=false;
+     for(let a=0;a<filled.length;a++)for(let b=a+1;b<filled.length;b++){
+       if(!sameF(factors[filled[a].j],factors[filled[b].j])) unequal=true;
+     }
+     accepted=unequal;
+     explanation=unequal
+       ?(window.currentGuess==='prop'
+          ?'Die korrekt berechneten Faktoren sind nicht gleich. Es liegt keine <strong>Quotientengleichheit</strong> vor; die geprüfte Zuordnungsart ist damit widerlegt.'
+          :'Die korrekt berechneten Faktoren sind nicht gleich. Es liegt keine <strong>Produktgleichheit</strong> vor; die geprüfte Zuordnungsart ist damit widerlegt.')
+       :'Für „weder noch“ brauchst du zwei korrekt berechnete, unterschiedliche Faktoren.';
+   } else {
+     accepted=filled.length===4 && factors.every(f=>sameF(f,factors[0]));
+     explanation=accepted
+       ?(t.type==='prop'
+          ?'Alle vier Proportionalitätsfaktoren stimmen überein. Es liegt <strong>Quotientengleichheit</strong> vor.'
+          :'Alle vier Proportionalitätsfaktoren stimmen überein. Es liegt <strong>Produktgleichheit</strong> vor.')
+       :'Prüfe alle vier Spalten.';
+   }
+ }
+ if(accepted)score++;
+ $('decFb').className='feedback '+(accepted?'ok':'bad');
+ $('decFb').innerHTML=(accepted?'Richtig. ':'Diese Entscheidung ist mit deinen bisherigen Rechnungen noch nicht ausreichend begründet. ')+explanation+
+ `<div class="actions"><button id="next" class="primary">${i<order.length-1?'Nächste Aufgabe':'Auswertung'}</button></div>`;
+ $('next').onclick=()=>{i++;if(i>=order.length){order=levelPool(tasks,'recognize').sort(()=>Math.random()-.5);i=0;} if(false){$('trainer').innerHTML=`<div class="summary"><h2>Training abgeschlossen</h2><div class="big">${score} / ${order.length}</div><p>richtig entschieden</p><button class="primary" onclick="location.reload()">Noch einmal trainieren</button></div>`}else{render();scrollTo(0,0)}};
+};
+render();
+
+/* --- Modus 2: Wertetabellen ergänzen --- */
+const valueTasks=[
+ {type:'prop', x:[12,20,35,50], y:[36,60,105,150], miss:[['x',2],['y',3]]},
+ {type:'prop', x:[18,30,42,75], y:[72,120,168,300], miss:[['y',1],['x',3]]},
+ {type:'prop', x:[16,28,45,64], y:[40,70,112.5,160], miss:[['x',1],['y',2]]},
+ {type:'prop', x:[25,40,60,90], y:[87.5,140,210,315], miss:[['y',1],['x',2]]},
+ {type:'prop', x:[14,26,48,70], y:[63,117,216,315], miss:[['x',1],['y',3]]},
+ {type:'prop', x:[22,38,56,84], y:[77,133,196,294], miss:[['y',1],['x',2]]},
+ {type:'prop', x:[24,36,55,80], y:[84,126,192.5,280], miss:[['x',2],['y',3]]},
+ {type:'prop', x:[15,32,48,72], y:[90,192,288,432], miss:[['y',1],['x',3]]},
+ {type:'prop', x:[28,44,65,92], y:[98,154,227.5,322], miss:[['x',1],['y',2]]},
+ {type:'prop', x:[18,34,50,76], y:[81,153,225,342], miss:[['y',2],['x',3]]},
+ {type:'anti', x:[12,18,27,54], y:[162,108,72,36], miss:[['x',2],['y',3]]},
+ {type:'anti', x:[15,24,40,60], y:[160,100,60,40], miss:[['y',1],['x',2]]},
+ {type:'anti', x:[16,20,32,64], y:[120,96,60,30], miss:[['x',1],['y',2]]},
+ {type:'anti', x:[18,30,45,75], y:[150,90,60,36], miss:[['y',1],['x',3]]},
+ {type:'anti', x:[14,21,42,63], y:[189,126,63,42], miss:[['x',1],['y',3]]},
+ {type:'anti', x:[20,25,40,80], y:[120,96,60,30], miss:[['y',1],['x',3]]},
+ {type:'anti', x:[24,30,48,72], y:[90,72,45,30], miss:[['x',2],['y',3]]},
+ {type:'anti', x:[18,36,54,81], y:[162,81,54,36], miss:[['y',1],['x',2]]},
+ {type:'anti', x:[25,40,50,100], y:[144,90,72,36], miss:[['x',1],['y',3]]},
+ {type:'anti', x:[16,32,64,80], y:[200,100,50,40], miss:[['y',1],['x',2]]},
+ {type:'prop', x:[6,9,14,20], y:[30,45,70,100], miss:[['x',1],['y',3]]},
+ {type:'prop', x:[7,12,15,25], y:[56,96,120,200], miss:[['y',1],['x',2]]},
+ {type:'prop', x:[4,11,15,30], y:[28,77,105,210], miss:[['x',2],['y',3]]},
+ {type:'anti', x:[2.5,4,5,8], y:[16,10,8,5], miss:[['y',1],['x',3]]},
+ {type:'anti', x:[1.5,2,3,7.5], y:[20,15,10,4], miss:[['x',1],['y',2]]},
+ {type:'anti', x:[2.4,3,4,6], y:[15,12,9,6], miss:[['y',2],['x',3]]},
+ {type:'anti', x:[1.2,1.6,2.4,4], y:[20,15,10,6], miss:[['x',2],['y',3]]},
+ {type:'anti', x:[2.5,5,7.5,12.5], y:[18,9,6,3.6], miss:[['y',1],['x',2]]}
+];
+let vOrder=[],vi=0,vScore=0;
+function shuffleValueTasks(){
+ vOrder=levelPool(valueTasks,'value').sort(()=>Math.random()-.5);vi=0;vScore=0;
+}
+function currentK(t){
+ return t.type==='prop' ? t.y[0]/t.x[0] : t.x[0]*t.y[0];
+}
+function renderValueTask(){
+ if(!vOrder.length || vi>=vOrder.length){vOrder=levelPool(valueTasks,'value').sort(()=>Math.random()-.5);vi=0;}
+ const t=vOrder[vi];
+ $('vType').textContent=t.type==='prop'?'Proportionale Zuordnung':'Antiproportionale Zuordnung';
+ $('helpBtn').classList.add('hidden');
+ $('kInput').value='';$('kInput').className='';$('kFb').className='';$('kFb').textContent='';
+ $('vFill').classList.add('hidden');
+ $('vFb').className='';$('vFb').textContent='';$('vNext').classList.add('hidden');
+ let miss=new Map(t.miss.map(([r,c])=>[r+c,true]));
+ function cell(row,c,val){
+   if(miss.has(row+c)){let iid='v-'+row+'-'+c;return '<td><span class="input-wrap"><input id="'+iid+'" inputmode="decimal" disabled data-row="'+row+'" data-col="'+c+'" aria-label="fehlender '+row+'-Wert"><button type="button" class="comma-btn" data-comma-for="'+iid+'" disabled>,</button></span></td>';}
+   return '<td>'+String(val).replace('.',',')+'</td>';
+ }
+ let h='<table class="vtable"><tr><th>x</th>';
+ t.x.forEach((v,c)=>h+=cell('x',c,v));h+='</tr><tr><th>y</th>';
+ t.y.forEach((v,c)=>h+=cell('y',c,v));h+='</tr></table>';
+ $('vTable').innerHTML=h;
+}
+function parseV(s){return parseFloat(String(s).trim().replace(',','.'))}
+$('kCheck').onclick=()=>{
+ const t=vOrder[vi], val=parseV($('kInput').value), expected=currentK(t);
+ const ok=Number.isFinite(val)&&Math.abs(val-expected)<1e-6;
+ $('kInput').classList.toggle('correct',ok);$('kInput').classList.toggle('wrong',!ok);
+ if(ok){
+   $('kFb').className='feedback ok';
+   $('kFb').textContent=t.type==='prop'?'Richtig. k = y : x':'Richtig. k = x · y';
+   $('vTable').querySelectorAll('input').forEach(inp=>inp.disabled=false);$('vTable').querySelectorAll('.comma-btn').forEach(b=>b.disabled=false);
+   $('vFill').classList.remove('hidden');
+ }else{
+   $('kFb').className='feedback bad';$('kFb').textContent='Prüfe k noch einmal.';
+   $('helpBtn').classList.add('hidden');
+   $('vTable').querySelectorAll('input').forEach(inp=>inp.disabled=true);$('vTable').querySelectorAll('.comma-btn').forEach(b=>b.disabled=true);
+   $('vFill').classList.add('hidden');
+ }
+};
+$('vCheck').onclick=()=>{
+ const t=vOrder[vi];let all=true;
+ $('vTable').querySelectorAll('input').forEach(inp=>{
+   const val=parseV(inp.value), expected=t[inp.dataset.row][+inp.dataset.col];
+   const roundedExpected=Math.round((expected+Number.EPSILON)*100)/100;
+  const ok=Number.isFinite(val)&&(Math.abs(val-expected)<1e-6 || Math.abs(val-roundedExpected)<1e-6);
+   inp.classList.toggle('correct',ok);inp.classList.toggle('wrong',!ok);
+   if(!ok)all=false;
+ });
+ if(all){
+   $('vFb').className='feedback ok';$('vFb').textContent='Richtig.';
+   $('helpBtn').classList.add('hidden');
+   $('vNext').classList.remove('hidden');
+ }else{
+   $('vFb').className='feedback bad';$('vFb').textContent='Prüfe deine Werte noch einmal.';
+   $('helpBtn').classList.remove('hidden');
+ }
+};
+$('vNext').onclick=()=>{vScore++;vi++;renderValueTask()};
+$('mode1Btn').onclick=()=>{$('ratioTrainer').classList.add('hidden');$('mode4Btn').classList.remove('active');
+ $('trainer').classList.remove('hidden');$('valueTrainer').classList.add('hidden');$('diagramTrainer').classList.add('hidden');$('ruleThreeTrainer').classList.add('hidden');$('recognizeSubnav').classList.remove('hidden');$('subTableBtn').classList.add('active');$('subDiagramBtn').classList.remove('active');
+ $('mode1Btn').classList.add('active');$('mode2Btn').classList.remove('active');$('mode3Btn').classList.remove('active');
+};
+$('mode2Btn').onclick=()=>{$('ratioTrainer').classList.add('hidden');$('mode4Btn').classList.remove('active');
+ $('trainer').classList.add('hidden');$('valueTrainer').classList.remove('hidden');$('diagramTrainer').classList.add('hidden');$('ruleThreeTrainer').classList.add('hidden');$('recognizeSubnav').classList.add('hidden');
+ $('mode2Btn').classList.add('active');$('mode1Btn').classList.remove('active');$('mode3Btn').classList.remove('active');
+ if(!vOrder.length){shuffleValueTasks();renderValueTask();}
+};
+
+function insertCommaFor(id){
+ const inp=document.getElementById(id);if(!inp||inp.disabled)return;
+ inp.focus();
+ if(inp.value.includes(',')||inp.value.includes('.'))return;
+ const a=inp.selectionStart??inp.value.length,b=inp.selectionEnd??a;
+ inp.value=inp.value.slice(0,a)+','+inp.value.slice(b);
+ try{inp.setSelectionRange(a+1,a+1)}catch(e){}
+}
+document.addEventListener('click',e=>{
+ const b=e.target.closest('[data-comma-for]');if(!b)return;
+ e.preventDefault();insertCommaFor(b.dataset.commaFor);
+});
+
+$('helpBtn').onclick=()=>{
+ const t=vOrder[vi];
+ if(t.type==='prop'){
+   $('helpText').innerHTML=
+     '<p><strong>Bei einer proportionalen Zuordnung:</strong></p>'+
+     '<p>Du kennst <strong>x</strong> und suchst <strong>y</strong>?<br>Dann rechne: <strong>x · k</strong>.</p>'+
+     '<p>Du kennst <strong>y</strong> und suchst <strong>x</strong>?<br>Dann rechne: <strong>y : k</strong>.</p>'+
+     '<div class="example">Merke: Mit <strong>k</strong> kannst du von x zu y multiplizieren – und auf dem Rückweg durch k teilen.</div>';
+ }else{
+   $('helpText').innerHTML=
+     '<p><strong>Bei einer antiproportionalen Zuordnung:</strong></p>'+
+     '<p>Hier ist <strong>k das gleichbleibende Produkt x · y</strong>.</p>'+
+     '<p>Du kennst <strong>x</strong> und suchst <strong>y</strong>?<br>Dann rechne: <strong>k : x</strong>.</p>'+
+     '<p>Du kennst <strong>y</strong> und suchst <strong>x</strong>?<br>Dann rechne: <strong>k : y</strong>.</p>'+
+     '<div class="example">Merke: Teile das gleichbleibende Produkt <strong>k</strong> durch den Wert, den du schon kennst.</div>';
+ }
+ $('helpOverlay').classList.remove('hidden');
+};
+$('helpClose').onclick=()=>$('helpOverlay').classList.add('hidden');
+$('helpOverlay').onclick=e=>{if(e.target===$('helpOverlay'))$('helpOverlay').classList.add('hidden')};
+
+// Modul 3: Diagramme
+const diagramTasks=[
+ {x:[10,20,30,50],y:[20,40,60,100],type:'prop'},
+ {x:[10,20,40,50],y:[30,60,120,150],type:'prop'},
+ {x:[10,20,30,60],y:[40,80,120,240],type:'prop'},
+ {x:[20,40,60,80],y:[30,60,90,120],type:'prop'},
+ {x:[10,25,40,50],y:[20,50,80,100],type:'prop'},
+ {x:[10,20,40,80],y:[120,60,30,15],type:'anti'},
+ {x:[10,20,30,60],y:[180,90,60,30],type:'anti'},
+ {x:[20,30,40,60],y:[120,80,60,40],type:'anti'},
+ {x:[10,20,40,50],y:[200,100,50,40],type:'anti'},
+ {x:[20,40,50,100],y:[100,50,40,20],type:'anti'},
+ {x:[10,20,30,50],y:[30,70,50,100],type:'neither'},
+ {x:[10,20,40,60],y:[40,80,60,140],type:'neither'},
+ {x:[10,20,40,80],y:[120,70,90,30],type:'neither'},
+ {x:[20,30,40,60],y:[100,60,80,40],type:'neither'},
+ {x:[10,20,40,50],y:[30,90,60,120],type:'neither'},
+ {x:[10,20,30,40],y:[10,40,90,160],type:'neither',shape:'parabola'},
+ {x:[10,20,30,40],y:[20,80,180,320],type:'neither',shape:'parabola'},
+ {x:[10,20,30,50],y:[10,40,90,250],type:'neither',shape:'parabola'},
+ {x:[10,20,40,50],y:[10,40,160,250],type:'neither',shape:'parabola'},
+ {x:[10,20,30,40],y:[5,20,45,80],type:'neither',shape:'parabola'}
+];
+
+/* Eigener Diagramm-Aufgabenpool für die Regelschulstufe.
+   Diese Aufgaben enthalten bewusst Dezimalzahlen, damit beim Stufenwechsel
+   immer ein gültiger Aufgabenpool vorhanden ist. */
+const diagramRegularTasks=[
+ {x:[2.5,5,7.5,10],y:[5,10,15,20],type:'prop'},
+ {x:[1.5,3,4.5,6],y:[6,12,18,24],type:'prop'},
+ {x:[2,3.5,5,6.5],y:[5,8.75,12.5,16.25],type:'prop'},
+ {x:[1.2,2.4,3.6,4.8],y:[3,6,9,12],type:'prop'},
+ {x:[2.5,4,6,10],y:[24,15,10,6],type:'anti'},
+ {x:[1.5,2,3,6],y:[24,18,12,6],type:'anti'},
+ {x:[2,2.5,4,5],y:[15,12,7.5,6],type:'anti'},
+ {x:[1.2,2,3,4.8],y:[20,12,8,5],type:'anti'},
+ /* Lineare Funktionen mit y-Achsenabschnitt ungleich 0: Gerade, aber nicht proportional. */
+ {x:[1.5,3,4.5,6],y:[13,16,19,22],type:'neither',shape:'linearOffset',m:2,b:10},
+ {x:[1.5,2.5,3.5,4.5],y:[16.25,18.75,21.25,23.75],type:'neither',shape:'linearOffset',m:2.5,b:12.5},
+ {x:[2,3.5,5,6.5],y:[12,15,18,21],type:'neither',shape:'linearOffset',m:2,b:8},
+ {x:[1.5,3,4.5,6],y:[3,6,10,12],type:'neither'},
+ {x:[2,3.5,5,6.5],y:[4,7,11,13],type:'neither'},
+ {x:[1.5,2.5,3.5,4.5],y:[2.25,6.25,12.25,20.25],type:'neither',shape:'parabola'},
+ {x:[1.2,2.4,3.6,4.8],y:[1.44,5.76,12.96,23.04],type:'neither',shape:'parabola'}
+];
+/* Ausgewogener Diagramm-Aufgabenpool für die Lernförderstufe: 8 proportional, 8 antiproportional, 2 weder noch. */
+const diagramSupportTasks=[
+ {x:[10,20,30,50],y:[20,40,60,100],type:'prop'},
+ {x:[10,20,40,50],y:[30,60,120,150],type:'prop'},
+ {x:[10,20,30,60],y:[40,80,120,240],type:'prop'},
+ {x:[20,40,60,80],y:[30,60,90,120],type:'prop'},
+ {x:[10,25,40,50],y:[20,50,80,100],type:'prop'},
+ {x:[5,10,20,40],y:[15,30,60,120],type:'prop'},
+ {x:[10,30,50,70],y:[20,60,100,140],type:'prop'},
+ {x:[20,30,50,80],y:[40,60,100,160],type:'prop'},
+ {x:[10,20,40,80],y:[120,60,30,15],type:'anti'},
+ {x:[10,20,30,60],y:[180,90,60,30],type:'anti'},
+ {x:[20,30,40,60],y:[120,80,60,40],type:'anti'},
+ {x:[10,20,40,50],y:[200,100,50,40],type:'anti'},
+ {x:[20,40,50,100],y:[100,50,40,20],type:'anti'},
+ {x:[5,10,20,40],y:[160,80,40,20],type:'anti'},
+ {x:[10,20,50,100],y:[100,50,20,10],type:'anti'},
+ {x:[15,30,45,90],y:[120,60,40,20],type:'anti'},
+ /* Lineare Funktionen mit y-Achsenabschnitt ungleich 0: Gerade, aber nicht proportional. */
+ {x:[10,20,30,40],y:[30,50,70,90],type:'neither',shape:'linearOffset',m:2,b:10},
+ {x:[10,20,30,40],y:[35,55,75,95],type:'neither',shape:'linearOffset',m:2,b:15},
+ {x:[10,20,30,40],y:[50,80,110,140],type:'neither',shape:'linearOffset',m:3,b:20},
+ {x:[10,20,30,50],y:[30,70,50,100],type:'neither'},
+ {x:[20,30,40,60],y:[100,60,80,40],type:'neither'}
+];
+let dOrder=[],dIndex=0,dTask=null,dPlaced=[],dChoice=null,dShapeChoice=null,dGeo=null,dShowGraph=false;
+function dShuffle(){
+ dOrder=(schoolLevel==='regular' ? diagramRegularTasks : diagramSupportTasks).sort(()=>Math.random()-.5);
+ dIndex=0;
+}
+function dFmt(n){return Number.isInteger(n)?String(n):String(Math.round(n*100)/100).replace('.',',')}
+function dStep(max){
+ const choices=[1,2,5,10,20,25,50,100,200,250,500,1000];
+ // Aim for roughly 7–12 labelled intervals so intermediate values stay visible.
+ for(const step of choices){
+   const intervals=Math.ceil(max/step);
+   if(intervals>=7 && intervals<=12)return step;
+ }
+ // Fallback for unusually large values.
+ const p=Math.pow(10,Math.floor(Math.log10(Math.max(max,1))));
+ return max/p<=5 ? p/2 : p;
+}
+function dRender(){
+ if(!dOrder.length||dIndex>=dOrder.length)dShuffle();
+ dTask=dOrder[dIndex];dPlaced=[];dChoice=null;dShapeChoice=null;dShowGraph=false;
+ $('dPointFb').textContent='';$('dPointFb').className='';
+ $('dDecisionFb').textContent='';$('dDecisionFb').className='';
+ $('dShapeFb').textContent='';$('dShapeFb').className='';$('dTypeStep').classList.add('hidden');document.querySelectorAll('input[name="dShape"]').forEach(x=>x.checked=false);
+ $('dDecision').classList.add('hidden');$('dNext').classList.add('hidden');
+ $('dClearPoints').onclick=()=>{
+ dPlaced=[];dShowGraph=false;dChoice=null;dShapeChoice=null;
+ $('dPointFb').textContent='';$('dPointFb').className='';
+ $('dDecisionFb').textContent='';$('dDecisionFb').className='';$('dShapeFb').textContent='';$('dShapeFb').className='';$('dTypeStep').classList.add('hidden');document.querySelectorAll('input[name="dShape"]').forEach(x=>x.checked=false);
+ $('dDecision').classList.add('hidden');$('dNext').classList.add('hidden');
+ document.querySelectorAll('#dChoices .choice').forEach(b=>b.classList.remove('selected'));
+ dDraw();
+};
+document.querySelectorAll('#dChoices .choice').forEach(b=>b.classList.remove('selected'));
+ let h='<table class="dTable"><tr><th>x</th>';
+ dTask.x.forEach(v=>h+='<td>'+dFmt(v)+'</td>');
+ h+='</tr><tr><th>y</th>';dTask.y.forEach(v=>h+='<td>'+dFmt(v)+'</td>');
+ $('dTable').innerHTML=h+'</tr></table>';dDraw();
+}
+function dDraw(){
+ const c=$('dCanvas'),q=c.getContext('2d'),W=c.width,H=c.height,L=68,R=28,T=24,B=55;
+ const xm0=Math.max(...dTask.x),ym0=Math.max(...dTask.y),xs=dStep(xm0*1.05),ys=dStep(ym0*1.05);
+ const xm=Math.ceil(xm0*1.05/xs)*xs,ym=Math.ceil(ym0*1.05/ys)*ys,pw=W-L-R,ph=H-T-B;
+ dGeo={L,R,T,B,xm,ym,pw,ph};
+ q.clearRect(0,0,W,H);q.fillStyle='#fff';q.fillRect(0,0,W,H);
+ q.font='13px Arial';q.lineWidth=1;q.strokeStyle='#ddd';
+ q.textAlign='center';q.textBaseline='top';
+ for(let x=0;x<=xm+xs/10;x+=xs){let px=L+x/xm*pw;q.beginPath();q.moveTo(px,T);q.lineTo(px,H-B);q.stroke();q.fillStyle='#444';q.fillText(dFmt(x),px,H-B+8)}
+ q.textAlign='right';q.textBaseline='middle';
+ for(let y=0;y<=ym+ys/10;y+=ys){let py=H-B-y/ym*ph;q.beginPath();q.moveTo(L,py);q.lineTo(W-R,py);q.stroke();q.fillStyle='#444';q.fillText(dFmt(y),L-8,py)}
+ q.strokeStyle='#222';q.lineWidth=2;q.beginPath();q.moveTo(L,T);q.lineTo(L,H-B);q.lineTo(W-R,H-B);q.stroke();
+ q.fillStyle='#222';q.font='bold 16px Arial';q.textAlign='center';q.textBaseline='top';q.fillText('x',W-R,H-B+28);
+ q.textAlign='right';q.textBaseline='middle';q.fillText('y',L-18,T);
+ dPlaced.forEach(i=>{let px=L+dTask.x[i]/xm*pw,py=H-B-dTask.y[i]/ym*ph;q.beginPath();q.arc(px,py,7,0,Math.PI*2);q.fillStyle='#167c80';q.fill();q.strokeStyle='#0b5558';q.stroke()});
+ if(dShowGraph && dTask.type==='prop'){
+   const k=dTask.y[0]/dTask.x[0], endX=Math.min(xm,ym/k);
+   q.beginPath();q.moveTo(L,H-B);q.lineTo(L+endX/xm*pw,H-B-(k*endX)/ym*ph);
+   q.strokeStyle='#c02b78';q.lineWidth=3;q.stroke();
+ }
+ if(dShowGraph && dTask.type==='anti'){
+   const k=dTask.x[0]*dTask.y[0];
+   const minX=Math.max(k/ym, xm/300);
+   q.beginPath();let started=false;
+   for(let n=0;n<=260;n++){
+     const x=minX+(xm-minX)*n/260,y=k/x;
+     if(y<0||y>ym)continue;
+     const px=L+x/xm*pw,py=H-B-y/ym*ph;
+     if(!started){q.moveTo(px,py);started=true}else q.lineTo(px,py);
+   }
+   q.strokeStyle='#c02b78';q.lineWidth=3;q.stroke();
+ }
+ if(dShowGraph && dTask.type==='neither'){
+   q.strokeStyle='#c02b78';q.lineWidth=3;
+   if(dTask.shape==='linearOffset'){
+     /* Gerade y = m*x + b mit b != 0. Sie ist linear, aber keine proportionale Zuordnung,
+        weil sie nicht durch den Koordinatenursprung verläuft. */
+     const m=dTask.m, b=dTask.b;
+     let xStart=0, xEnd=xm;
+     if(m>0) xEnd=Math.min(xm,(ym-b)/m);
+     if(m<0) xStart=Math.max(0,(ym-b)/m);
+     const yStart=m*xStart+b, yEnd=m*xEnd+b;
+     q.beginPath();
+     q.moveTo(L+xStart/xm*pw,H-B-yStart/ym*ph);
+     q.lineTo(L+xEnd/xm*pw,H-B-yEnd/ym*ph);
+     q.stroke();
+   }else if(dTask.shape==='parabola'){
+     const a=dTask.y[0]/(dTask.x[0]*dTask.x[0]);
+     const endX=Math.min(xm,Math.sqrt(ym/a));
+     q.beginPath();
+     for(let n=0;n<=260;n++){
+       const x=endX*n/260,y=a*x*x,px=L+x/xm*pw,py=H-B-y/ym*ph;
+       if(n===0)q.moveTo(px,py);else q.lineTo(px,py);
+     }
+     q.stroke();
+   }else{
+     // Smooth visual curve through the four tabulated points.
+     const pts=dTask.x.map((x,i)=>({x:L+x/xm*pw,y:H-B-dTask.y[i]/ym*ph}))
+                      .sort((a,b)=>a.x-b.x);
+     q.beginPath();q.moveTo(pts[0].x,pts[0].y);
+     for(let i=0;i<pts.length-1;i++){
+       const p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[i+1],p3=pts[Math.min(pts.length-1,i+2)];
+       const cp1x=p1.x+(p2.x-p0.x)/6, cp1y=p1.y+(p2.y-p0.y)/6;
+       const cp2x=p2.x-(p3.x-p1.x)/6, cp2y=p2.y-(p3.y-p1.y)/6;
+       q.bezierCurveTo(cp1x,cp1y,cp2x,cp2y,p2.x,p2.y);
+     }
+     q.stroke();
+   }
+ }
+}
+$('dCanvas').addEventListener('pointerdown',e=>{
+ const c=$('dCanvas'),r=c.getBoundingClientRect(),g=dGeo;if(!g)return;
+ const px=(e.clientX-r.left)*c.width/r.width,py=(e.clientY-r.top)*c.height/r.height;
+ let best=-1,dist=1e9;
+ dTask.x.forEach((x,i)=>{let tx=g.L+x/g.xm*g.pw,ty=c.height-g.B-dTask.y[i]/g.ym*g.ph,d=Math.hypot(px-tx,py-ty);if(d<dist){dist=d;best=i}});
+ if(dist>34){$('dPointFb').className='feedback bad';$('dPointFb').textContent='Tippe näher an den passenden Punkt.';return}
+ let k=dPlaced.indexOf(best);if(k>=0)dPlaced.splice(k,1);else dPlaced.push(best);
+ dShowGraph=false;$('dDecision').classList.add('hidden');$('dNext').classList.add('hidden');
+ $('dPointFb').textContent='';$('dPointFb').className='';dDraw();
+});
+$('dCheckPoints').onclick=()=>{
+ if(dPlaced.length===dTask.x.length){dShowGraph=true;dDraw();$('dPointFb').className='feedback ok';$('dPointFb').textContent='Richtig – alle vier Punkte stimmen. Der Graph ist jetzt eingezeichnet.';$('dDecision').classList.remove('hidden')}
+ else{$('dPointFb').className='feedback bad';$('dPointFb').textContent='Noch nicht richtig. Prüfe, ob alle vier Wertepaare eingezeichnet sind.'}
+};
+document.querySelectorAll('input[name="dShape"]').forEach(cb=>cb.addEventListener('change',()=>{
+ document.querySelectorAll('input[name="dShape"]').forEach(x=>{if(x!==cb)x.checked=false});
+ dShapeChoice=cb.checked?cb.value:null;$('dShapeFb').textContent='';$('dShapeFb').className='';$('dTypeStep').classList.add('hidden');
+ dChoice=null;document.querySelectorAll('#dChoices .choice').forEach(b=>b.classList.remove('selected'));
+}));
+$('dCheckShape').onclick=()=>{
+ if(!dShapeChoice){$('dShapeFb').className='feedback bad';$('dShapeFb').textContent='Wähle zuerst eine Form aus.';return}
+ const expected=dTask.type==='prop'?'line':dTask.type==='anti'?'hyperbola':'neither';
+ if(dShapeChoice===expected){$('dShapeFb').className='feedback ok';$('dShapeFb').textContent='Richtig. Jetzt kannst du die Zuordnungsart bestimmen.';$('dTypeStep').classList.remove('hidden')}
+ else{$('dShapeFb').className='feedback bad';$('dShapeFb').textContent='Prüfe die Form des eingezeichneten Graphen noch einmal.';$('dTypeStep').classList.add('hidden')}
+};
+document.querySelectorAll('#dChoices .choice').forEach(b=>b.onclick=()=>{dChoice=b.dataset.v;document.querySelectorAll('#dChoices .choice').forEach(x=>x.classList.toggle('selected',x===b))});
+$('dCheckDecision').onclick=()=>{
+ if(!dChoice){$('dDecisionFb').className='feedback bad';$('dDecisionFb').textContent='Wähle zuerst eine Zuordnungsart.';return}
+ if(dChoice===dTask.type){$('dDecisionFb').className='feedback ok';$('dDecisionFb').textContent='Richtig.';$('dNext').classList.remove('hidden')}
+ else{$('dDecisionFb').className='feedback bad';$('dDecisionFb').textContent='Prüfe deine Entscheidung noch einmal.'}
+};
+$('dNext').onclick=()=>{dIndex++;dRender()};
+$('subTableBtn').onclick=()=>{
+ $('trainer').classList.remove('hidden');$('diagramTrainer').classList.add('hidden');$('valueTrainer').classList.add('hidden');
+ $('subTableBtn').classList.add('active');$('subDiagramBtn').classList.remove('active');
+};
+$('subDiagramBtn').onclick=()=>{
+ $('trainer').classList.add('hidden');$('diagramTrainer').classList.remove('hidden');$('valueTrainer').classList.add('hidden');
+ $('subDiagramBtn').classList.add('active');$('subTableBtn').classList.remove('active');
+ if(!dOrder.length)dShuffle();dRender();
+};
+const ruleTasks=[
+{story:'4 Hefte kosten 12 €. Wie viel kosten 7 Hefte?',x:'Anzahl Hefte',y:'Preis in €',t:'prop',v:[4,12,1,3,7,21],answerCol:'y',answer:'7 Hefte kosten 21 €.'},
+{story:'5 kg Äpfel kosten 15 €. Wie viele Kilogramm Äpfel bekommt man für 24 €?',x:'Masse in kg',y:'Preis in €',t:'prop',v:[5,15,1,3,8,24],answerCol:'x',answer:'Für 24 € bekommt man 8 kg Äpfel.'},
+{story:'3 Flaschen enthalten 6 l Saft. Wie viel enthalten 7 gleich große Flaschen?',x:'Anzahl Flaschen',y:'Saft in l',t:'prop',v:[3,6,1,2,7,14],answerCol:'y',answer:'7 Flaschen enthalten 14 l Saft.'},
+{story:'6 Eintrittskarten kosten 48 €. Wie viele Eintrittskarten bekommt man für 72 €?',x:'Anzahl Eintrittskarten',y:'Preis in €',t:'prop',v:[6,48,1,8,9,72],answerCol:'x',answer:'Für 72 € bekommt man 9 Eintrittskarten.'},
+{story:'4 Brötchen kosten 2 €. Wie viel kosten 10 Brötchen?',x:'Anzahl Brötchen',y:'Preis in €',t:'prop',v:[4,2,1,0.5,10,5],answerCol:'y',answer:'10 Brötchen kosten 5 €.'},
+{story:'8 m Stoff kosten 56 €. Wie viele Meter Stoff bekommt man für 35 €?',x:'Stoff in m',y:'Preis in €',t:'prop',v:[8,56,1,7,5,35],answerCol:'x',answer:'Für 35 € bekommt man 5 m Stoff.'},
+{story:'3 Packungen enthalten zusammen 18 Stifte. Wie viele Stifte sind in 7 gleich großen Packungen?',x:'Anzahl Packungen',y:'Anzahl Stifte',t:'prop',v:[3,18,1,6,7,42],answerCol:'y',answer:'In 7 Packungen sind 42 Stifte.'},
+{story:'In 5 Stunden werden bei gleichem Tempo 20 km zurückgelegt. Wie viele Stunden benötigt man für 32 km?',x:'Zeit in h',y:'Strecke in km',t:'prop',v:[5,20,1,4,8,32],answerCol:'x',answer:'Für 32 km benötigt man 8 Stunden.'},
+{story:'6 gleiche Kisten wiegen zusammen 30 kg. Wie viel wiegen 9 solche Kisten?',x:'Anzahl Kisten',y:'Masse in kg',t:'prop',v:[6,30,1,5,9,45],answerCol:'y',answer:'9 Kisten wiegen zusammen 45 kg.'},
+{story:'4 Liter Farbe reichen für 24 m². Für wie viele Quadratmeter reichen 7 Liter bei gleichem Verbrauch?',x:'Farbe in l',y:'Fläche in m²',t:'prop',v:[4,24,1,6,7,42],answerCol:'y',answer:'7 Liter Farbe reichen für 42 m².'},
+{story:'4 Maschinen benötigen für einen Auftrag 12 Stunden. Wie lange benötigen 6 gleich schnelle Maschinen?',x:'Anzahl Maschinen',y:'Zeit in h',t:'anti',v:[4,12,1,48,6,8],answerCol:'y',answer:'6 Maschinen benötigen 8 Stunden.'},
+{story:'3 Arbeiter benötigen für eine Arbeit 16 Stunden. Wie viele gleich schnelle Arbeiter werden benötigt, wenn die Arbeit in 8 Stunden fertig sein soll?',x:'Anzahl Arbeiter',y:'Zeit in h',t:'anti',v:[3,16,1,48,6,8],answerCol:'x',answer:'Für 8 Stunden werden 6 Arbeiter benötigt.'},
+{story:'8 Pumpen leeren ein Becken in 6 Stunden. Wie viele gleich starke Pumpen werden benötigt, wenn das Becken in 12 Stunden geleert werden soll?',x:'Anzahl Pumpen',y:'Zeit in h',t:'anti',v:[8,6,1,48,4,12],answerCol:'x',answer:'Für 12 Stunden werden 4 Pumpen benötigt.'},
+{story:'5 gleiche Drucker erledigen einen Auftrag in 12 Minuten. Wie lange brauchen 10 gleiche Drucker?',x:'Anzahl Drucker',y:'Zeit in min',t:'anti',v:[5,12,1,60,10,6],answerCol:'y',answer:'10 Drucker benötigen 6 Minuten.'},
+{story:'6 Personen haben einen Getränkevorrat für 10 Tage. Für wie viele Personen reicht derselbe Vorrat 5 Tage?',x:'Anzahl Personen',y:'Tage',t:'anti',v:[6,10,1,60,12,5],answerCol:'x',answer:'Für 12 Personen reicht der Vorrat 5 Tage.'},
+{story:'4 Wasserhähne füllen ein Becken in 15 Minuten. Wie lange brauchen 10 gleich starke Wasserhähne?',x:'Anzahl Wasserhähne',y:'Zeit in min',t:'anti',v:[4,15,1,60,10,6],answerCol:'y',answer:'10 Wasserhähne benötigen 6 Minuten.'},
+{story:'8 Helfer benötigen zum Aufräumen 9 Stunden. Wie lange benötigen 12 gleich schnelle Helfer?',x:'Anzahl Helfer',y:'Zeit in h',t:'anti',v:[8,9,1,72,12,6],answerCol:'y',answer:'12 Helfer benötigen 6 Stunden.'},
+{story:'3 Lastwagen benötigen für den Abtransport 20 Fahrten pro Lastwagen. Wie viele Fahrten pro Lastwagen sind bei 5 gleich großen Lastwagen nötig?',x:'Anzahl Lastwagen',y:'Anzahl Fahrten je Lastwagen',t:'anti',v:[3,20,1,60,5,12],answerCol:'y',answer:'Bei 5 Lastwagen sind 12 Fahrten pro Lastwagen nötig.'},
+{story:'10 gleiche Maschinen fertigen einen Auftrag in 6 Stunden. Wie viele dieser Maschinen werden benötigt, wenn der Auftrag in 12 Stunden fertig sein soll?',x:'Anzahl Maschinen',y:'Zeit in h',t:'anti',v:[10,6,1,60,5,12],answerCol:'x',answer:'Für 12 Stunden werden 5 Maschinen benötigt.'},
+{story:'6 Personen teilen einen Vorrat so, dass er 8 Tage reicht. Wie lange reicht derselbe Vorrat für 4 Personen?',x:'Anzahl Personen',y:'Tage',t:'anti',v:[6,8,1,48,4,12],answerCol:'y',answer:'Für 4 Personen reicht der Vorrat 12 Tage.'},
+{story:'7 Kinokarten kosten 59,50 €. Wie viel kosten 12 Kinokarten?',x:'Anzahl Kinokarten',y:'Preis in €',t:'prop',v:[7,59.5,1,8.5,12,102],answerCol:'y',answer:'12 Kinokarten kosten 102 €.'},
+{story:'2,5 kg Nüsse kosten 20 €. Wie viel kosten 4 kg?',x:'Masse in kg',y:'Preis in €',t:'prop',v:[2.5,20,1,8,4,32],answerCol:'y',answer:'4 kg Nüsse kosten 32 €.'},
+{story:'9 Notizbücher kosten 31,50 €. Wie viele Notizbücher bekommt man für 49 €?',x:'Anzahl Notizbücher',y:'Preis in €',t:'prop',v:[9,31.5,1,3.5,14,49],answerCol:'x',answer:'Für 49 € bekommt man 14 Notizbücher.'},
+{story:'5,5 m Kabel wiegen 2,2 kg. Wie viel wiegen 12 m desselben Kabels?',x:'Kabellänge in m',y:'Masse in kg',t:'prop',v:[5.5,2.2,1,0.4,12,4.8],answerCol:'y',answer:'12 m Kabel wiegen 4,8 kg.'},
+{story:'Ein Drucker druckt in 4 Minuten 90 Seiten. Wie viele Seiten druckt er in 7 Minuten?',x:'Zeit in min',y:'Anzahl Seiten',t:'prop',v:[4,90,1,22.5,7,157.5],answerCol:'y',answer:'In 7 Minuten druckt er 157,5 Seiten.'},
+{story:'9 Bauarbeiter benötigen 16 Tage. Wie lange benötigen 12 gleich schnelle Bauarbeiter?',x:'Anzahl Bauarbeiter',y:'Zeit in Tagen',t:'anti',v:[9,16,1,144,12,12],answerCol:'y',answer:'12 Bauarbeiter benötigen 12 Tage.'},
+{story:'15 Kühe haben Futter für 24 Tage. Wie lange reicht es für 18 Kühe?',x:'Anzahl Kühe',y:'Tage',t:'anti',v:[15,24,1,360,18,20],answerCol:'y',answer:'Für 18 Kühe reicht das Futter 20 Tage.'},
+{story:'6 Bagger schaffen eine Arbeit in 14 Stunden. Wie viele Bagger braucht man für 12 Stunden?',x:'Anzahl Bagger',y:'Zeit in h',t:'anti',v:[6,14,1,84,7,12],answerCol:'x',answer:'Für 12 Stunden werden 7 Bagger benötigt.'},
+{story:'8 Teams benötigen für eine Datenerfassung 15 Stunden. Wie lange benötigen 20 gleich schnelle Teams?',x:'Anzahl Teams',y:'Zeit in h',t:'anti',v:[8,15,1,120,20,6],answerCol:'y',answer:'20 Teams benötigen 6 Stunden.'},
+{story:'14 Personen haben Proviant für 9 Tage. Für wie viele Personen reicht derselbe Proviant 6 Tage?',x:'Anzahl Personen',y:'Tage',t:'anti',v:[14,9,1,126,21,6],answerCol:'x',answer:'Für 6 Tage reicht der Proviant für 21 Personen.'}
+];
+/* Stufen: die ersten 20 Sachaufgaben für die Lernförderstufe, die übrigen für die Regelschulstufe */
+ruleTasks.forEach((t,i)=>t.lvl=i<20?'support':'regular');
+function fiveSizeChoices(task){
+ const all=[...new Set(ruleTasks.flatMap(t=>[t.x,t.y]))].filter(v=>v!==task.x&&v!==task.y);
+ for(let i=all.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[all[i],all[j]]=[all[j],all[i]]}
+ const vals=[task.x,task.y,...all.slice(0,3)];
+ for(let i=vals.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[vals[i],vals[j]]=[vals[j],vals[i]]}
+ return vals;
+}
+function fillFiveSizeSelects(xId,yId,task){
+ const vals=fiveSizeChoices(task);
+ const html='<option value="">– auswählen –</option>'+vals.map(v=>`<option value="${v}">${v}</option>`).join('');
+ $(xId).innerHTML=html;$(yId).innerHTML=html;
+}
+
+let rq=[],ri=0,rt=null,rtype=null;
+function rn(v){return Number(String(v).replace(',','.'))}
+function req(a,b){return Number.isFinite(a)&&Math.abs(a-b)<.001}
+function rCalcOK(from,to,op,n){
+ n=rn(n); if(!Number.isFinite(n)||n===0||!op)return false;
+ return op==='mul'?req(from*n,to):op==='div'?req(from/n,to):false;
+}
+function rload(){
+ if(!rq.length||ri>=rq.length){rq=levelPool(ruleTasks,'story').sort(()=>Math.random()-.5);ri=0}
+ rt=rq[ri];rtype=null;fillFiveSizeSelects('rX','rY',rt);$('rStory').textContent=rt.story;
+ document.querySelectorAll('.rType').forEach(b=>b.classList.remove('selected'));
+ $('rWork').classList.add('hidden');$('rNext').classList.add('hidden');$('rAutoAnswer').classList.add('hidden');$('rAutoAnswer').textContent='';$('r31').closest('td').classList.remove('rAnswerCell');$('r32').closest('td').classList.remove('rAnswerCell');
+ ['r11','r12','r21','r22','r31','r32','rL1n','rL2n','rR1n','rR2n'].forEach(i=>$(i).value='');
+ ['rL1op','rL2op','rR1op','rR2op'].forEach(i=>$(i).value='');
+ $('rFb0').textContent='';$('rTableFb').textContent='';
+}
+document.querySelectorAll('.rType').forEach(b=>b.onclick=()=>{rtype=b.dataset.v;document.querySelectorAll('.rType').forEach(x=>x.classList.toggle('selected',x===b))});
+$('rCheck0').onclick=()=>{
+ let ok=$('rX').value===rt.x&&$('rY').value===rt.y&&rtype===rt.t;
+ $('rFb0').className='feedback '+(ok?'ok':'bad');$('rFb0').textContent=ok?'Richtig. Fülle jetzt den Dreisatz vollständig aus.':'Prüfe deine Angaben noch einmal.';if(ok){$('rHX').textContent=rt.x;$('rHY').textContent=rt.y;$('rWork').classList.remove('hidden')}else $('rWork').classList.add('hidden');
+};
+$('rCheckTable').onclick=()=>{
+ const v=rt.v;
+ const vals=req(rn($('r11').value),v[0])&&req(rn($('r12').value),v[1])&&req(rn($('r21').value),v[2])&&req(rn($('r22').value),v[3])&&req(rn($('r31').value),v[4])&&req(rn($('r32').value),v[5]);
+ const arcs=rCalcOK(v[0],v[2],$('rL1op').value,$('rL1n').value)&&rCalcOK(v[2],v[4],$('rL2op').value,$('rL2n').value)&&rCalcOK(v[1],v[3],$('rR1op').value,$('rR1n').value)&&rCalcOK(v[3],v[5],$('rR2op').value,$('rR2n').value);
+ const ok=vals&&arcs;
+ $('rTableFb').className='feedback '+(ok?'ok':'bad');
+ $('rTableFb').textContent=ok?'Richtig – Dreisatz vollständig gelöst.':(!vals?'Prüfe die Werte in der Tabelle noch einmal.':'Prüfe die Rechenoperationen an den Bögen noch einmal.');
+ if(ok){
+   $('rNext').classList.remove('hidden');
+   const cell=(rt.answerCol==='x' ? $('r31') : $('r32')).closest('td');
+   cell.classList.add('rAnswerCell');
+   $('rAutoAnswer').textContent='Antwort: '+rt.answer;
+   $('rAutoAnswer').classList.remove('hidden');
+ }else{
+   $('rNext').classList.add('hidden');
+   $('rAutoAnswer').classList.add('hidden');
+   $('r31').closest('td').classList.remove('rAnswerCell');$('r32').closest('td').classList.remove('rAnswerCell');
+ }
+};
+
+let rLastNumberInput=null;
+const rNumberIds=['r11','r12','r21','r22','r31','r32','rL1n','rL2n','rR1n','rR2n'];
+rNumberIds.forEach(id=>$(id).addEventListener('focus',()=>rLastNumberInput=$(id)));
+$('rCommaGlobal').onclick=()=>{
+ const el=rLastNumberInput;
+ if(!el)return;
+ const a=el.selectionStart??el.value.length,z=el.selectionEnd??a;
+ if(el.value.includes(',')||el.value.includes('.'))return;
+ el.value=el.value.slice(0,a)+','+el.value.slice(z);
+ el.focus();el.setSelectionRange(a+1,a+1);
+};
+$('rNext').onclick=()=>{ri++;rload()};
+$('mode3Btn').onclick=()=>{$('ratioTrainer').classList.add('hidden');$('mode4Btn').classList.remove('active');
+ $('trainer').classList.add('hidden');$('valueTrainer').classList.add('hidden');$('diagramTrainer').classList.add('hidden');$('ruleThreeTrainer').classList.remove('hidden');$('recognizeSubnav').classList.add('hidden');
+ $('mode1Btn').classList.remove('active');$('mode2Btn').classList.remove('active');$('mode3Btn').classList.add('active');rload()
+};
+// Bereich 4: Verhältnisgleichung
+// Eigener Aufgabenpool: bewusst andere Sachaufgaben als beim Dreisatz.
+const ratioTasks=[
+{story:'6 Müsliriegel kosten 7,20 €. Wie viel kosten 15 Müsliriegel?',x:'Anzahl Müsliriegel',y:'Preis in €',t:'prop',v:[6,7.2,1,1.2,15,18],answerCol:'y',answer:'15 Müsliriegel kosten 18 €.'},
+{story:'4,5 kg Reis kosten 13,50 €. Wie viel kosten 7 kg?',x:'Masse in kg',y:'Preis in €',t:'prop',v:[4.5,13.5,1,3,7,21],answerCol:'y',answer:'7 kg Reis kosten 21 €.'},
+{story:'8 Postkarten kosten 6 €. Wie viele Postkarten bekommt man für 15 €?',x:'Anzahl Postkarten',y:'Preis in €',t:'prop',v:[8,6,1,0.75,20,15],answerCol:'x',answer:'Für 15 € bekommt man 20 Postkarten.'},
+{story:'12 m Band kosten 9 €. Wie viel kosten 18 m?',x:'Bandlänge in m',y:'Preis in €',t:'prop',v:[12,9,1,0.75,18,13.5],answerCol:'y',answer:'18 m Band kosten 13,50 €.'},
+{story:'5 Liter Saft reichen für 20 Gläser. Für wie viele Gläser reichen 8 Liter?',x:'Saft in l',y:'Anzahl Gläser',t:'prop',v:[5,20,1,4,8,32],answerCol:'y',answer:'8 Liter reichen für 32 Gläser.'},
+{story:'7 Ordner wiegen zusammen 4,2 kg. Wie viel wiegen 15 gleiche Ordner?',x:'Anzahl Ordner',y:'Masse in kg',t:'prop',v:[7,4.2,1,0.6,15,9],answerCol:'y',answer:'15 Ordner wiegen 9 kg.'},
+{story:'2,4 m Holzleiste kosten 8,40 €. Wie viel kosten 6 m?',x:'Länge in m',y:'Preis in €',t:'prop',v:[2.4,8.4,1,3.5,6,21],answerCol:'y',answer:'6 m kosten 21 €.'},
+{story:'9 Fotos benötigen 27 MB Speicher. Wie viel Speicher benötigen 25 gleich große Fotos?',x:'Anzahl Fotos',y:'Speicher in MB',t:'prop',v:[9,27,1,3,25,75],answerCol:'y',answer:'25 Fotos benötigen 75 MB.'},
+{story:'16 Seiten eines Buches wiegen 24 g. Wie viele Seiten entsprechen bei gleichem Papier 60 g?',x:'Anzahl Seiten',y:'Masse in g',t:'prop',v:[16,24,1,1.5,40,60],answerCol:'x',answer:'60 g entsprechen 40 Seiten.'},
+{story:'3,5 Stunden Fahrt ergeben 245 km. Welche Strecke wird bei gleichem Tempo in 6 Stunden zurückgelegt?',x:'Zeit in h',y:'Strecke in km',t:'prop',v:[3.5,245,1,70,6,420],answerCol:'y',answer:'In 6 Stunden werden 420 km zurückgelegt.'},
+{story:'11 Becher Joghurt kosten 8,25 €. Wie viele Becher bekommt man für 12 €?',x:'Anzahl Becher',y:'Preis in €',t:'prop',v:[11,8.25,1,0.75,16,12],answerCol:'x',answer:'Für 12 € bekommt man 16 Becher.'},
+{story:'2,5 Liter Lack reichen für 17,5 m². Für welche Fläche reichen 6 Liter?',x:'Lack in l',y:'Fläche in m²',t:'prop',v:[2.5,17.5,1,7,6,42],answerCol:'y',answer:'6 Liter reichen für 42 m².'},
+{story:'18 Schrauben wiegen 126 g. Wie viel wiegen 35 gleiche Schrauben?',x:'Anzahl Schrauben',y:'Masse in g',t:'prop',v:[18,126,1,7,35,245],answerCol:'y',answer:'35 Schrauben wiegen 245 g.'},
+{story:'6 Minuten Musik benötigen 48 MB. Wie viele Minuten passen bei gleicher Datenrate in 120 MB?',x:'Zeit in min',y:'Speicher in MB',t:'prop',v:[6,48,1,8,15,120],answerCol:'x',answer:'120 MB entsprechen 15 Minuten Musik.'},
+{story:'4 Portionen Suppe benötigen 1,2 l Brühe. Wie viel Brühe braucht man für 15 Portionen?',x:'Anzahl Portionen',y:'Brühe in l',t:'prop',v:[4,1.2,1,0.3,15,4.5],answerCol:'y',answer:'Für 15 Portionen braucht man 4,5 l Brühe.'},
+{story:'6 Roboter erledigen eine Sortierarbeit in 20 Minuten. Wie lange brauchen 8 gleich schnelle Roboter?',x:'Anzahl Roboter',y:'Zeit in min',t:'anti',v:[6,20,1,120,8,15],answerCol:'y',answer:'8 Roboter benötigen 15 Minuten.'},
+{story:'9 Schläuche füllen einen Tank in 14 Minuten. Wie viele Schläuche braucht man für 21 Minuten?',x:'Anzahl Schläuche',y:'Zeit in min',t:'anti',v:[9,14,1,126,6,21],answerCol:'x',answer:'Für 21 Minuten werden 6 Schläuche benötigt.'},
+{story:'12 Monteure benötigen 10 Stunden. Wie lange benötigen 15 gleich schnelle Monteure?',x:'Anzahl Monteure',y:'Zeit in h',t:'anti',v:[12,10,1,120,15,8],answerCol:'y',answer:'15 Monteure benötigen 8 Stunden.'},
+{story:'7 Fahrzeuge benötigen für einen Transport je 18 Fahrten. Wie viele Fahrten je Fahrzeug sind bei 9 Fahrzeugen nötig?',x:'Anzahl Fahrzeuge',y:'Fahrten je Fahrzeug',t:'anti',v:[7,18,1,126,9,14],answerCol:'y',answer:'Bei 9 Fahrzeugen sind 14 Fahrten je Fahrzeug nötig.'},
+{story:'16 Personen haben Wasser für 15 Tage. Wie lange reicht es für 20 Personen?',x:'Anzahl Personen',y:'Tage',t:'anti',v:[16,15,1,240,20,12],answerCol:'y',answer:'Für 20 Personen reicht das Wasser 12 Tage.'},
+{story:'5 Server bearbeiten einen Auftrag in 24 Minuten. Wie viele Server braucht man für 15 Minuten?',x:'Anzahl Server',y:'Zeit in min',t:'anti',v:[5,24,1,120,8,15],answerCol:'x',answer:'Für 15 Minuten werden 8 Server benötigt.'},
+{story:'18 Helfer bauen eine Bühne in 10 Stunden auf. Wie lange brauchen 12 gleich schnelle Helfer?',x:'Anzahl Helfer',y:'Zeit in h',t:'anti',v:[18,10,1,180,12,15],answerCol:'y',answer:'12 Helfer benötigen 15 Stunden.'},
+{story:'4 Kopierer benötigen für einen Stapel 30 Minuten. Wie lange benötigen 10 gleich schnelle Kopierer?',x:'Anzahl Kopierer',y:'Zeit in min',t:'anti',v:[4,30,1,120,10,12],answerCol:'y',answer:'10 Kopierer benötigen 12 Minuten.'},
+{story:'15 Pferde haben Heu für 28 Tage. Für wie viele Pferde reicht es 21 Tage?',x:'Anzahl Pferde',y:'Tage',t:'anti',v:[15,28,1,420,20,21],answerCol:'x',answer:'Für 21 Tage reicht das Heu für 20 Pferde.'},
+{story:'8 Kräne entladen ein Schiff in 18 Stunden. Wie lange brauchen 12 gleich starke Kräne?',x:'Anzahl Kräne',y:'Zeit in h',t:'anti',v:[8,18,1,144,12,12],answerCol:'y',answer:'12 Kräne benötigen 12 Stunden.'},
+{story:'14 Reinigungskräfte benötigen 6 Stunden. Wie viele Reinigungskräfte braucht man für 4 Stunden?',x:'Anzahl Reinigungskräfte',y:'Zeit in h',t:'anti',v:[14,6,1,84,21,4],answerCol:'x',answer:'Für 4 Stunden werden 21 Reinigungskräfte benötigt.'},
+{story:'10 Pumpen fördern einen Vorrat in 9 Stunden. Wie lange brauchen 15 gleich starke Pumpen?',x:'Anzahl Pumpen',y:'Zeit in h',t:'anti',v:[10,9,1,90,15,6],answerCol:'y',answer:'15 Pumpen benötigen 6 Stunden.'},
+{story:'6 Lieferwagen benötigen je 25 Touren. Wie viele Touren je Lieferwagen sind bei 10 Lieferwagen nötig?',x:'Anzahl Lieferwagen',y:'Touren je Lieferwagen',t:'anti',v:[6,25,1,150,10,15],answerCol:'y',answer:'Bei 10 Lieferwagen sind 15 Touren je Lieferwagen nötig.'},
+{story:'24 Personen haben Vorräte für 5 Tage. Wie viele Personen können davon 8 Tage leben?',x:'Anzahl Personen',y:'Tage',t:'anti',v:[24,5,1,120,15,8],answerCol:'x',answer:'Für 8 Tage reichen die Vorräte für 15 Personen.'},
+{story:'20 Maschinen benötigen 7,5 Stunden. Wie lange benötigen 12 gleich schnelle Maschinen?',x:'Anzahl Maschinen',y:'Zeit in h',t:'anti',v:[20,7.5,1,150,12,12.5],answerCol:'y',answer:'12 Maschinen benötigen 12,5 Stunden.'}
+];
+/* Stufen für die Verhältnisgleichung: je Stufe proportionale und antiproportionale Aufgaben */
+const ratioSupportIdx=[2,4,7,8,12,13,15,16,17,18,19,20,22,26,27];
+ratioTasks.forEach((t,i)=>t.lvl=ratioSupportIdx.includes(i)?'support':'regular');
+let qq=[],qi=0,qt=null,qtype=null,qFlipped=false;
+const qSelOptions=()=>{};
+function qField(id,value,isTarget){
+ const box=$(id); box.innerHTML='';
+ const inp=document.createElement('input');
+ inp.inputMode='decimal'; inp.autocomplete='off'; inp.dataset.expected=value;
+ inp.dataset.target=isTarget?'1':'0'; inp.placeholder='Zahl oder x';
+ inp.addEventListener('input',()=>{
+   let v=inp.value.trim().toLowerCase();
+   if(v==='x'){
+     document.querySelectorAll('#ratioTrainer .qEquation input').forEach(other=>{
+       if(other!==inp && other.value.trim().toLowerCase()==='x') other.value='';
+     });
+   }
+ });
+ box.appendChild(inp);
+}
+function qRender(){
+ const v=qt.v, sought=qt.answerCol;
+ let A=v[0],B=v[4],C=v[1],D=v[5];
+ qField('qABox',A,false);
+ qField('qBBox',B,sought==='x');
+ qField('qCBox',C,false);
+ qField('qDBox',D,sought==='y');
+ qFlipped=false;
+ $('qReciprocal').classList.remove('hidden','done');
+ $('qReciprocal').textContent='Kehrwert des rechten Bruches bilden';
+ $('qEqHint').textContent=`Linker Bruch: ${qt.x} · rechter Bruch: ${qt.y}. Oben steht jeweils das gegebene Wertepaar. Ob du den rechten Bruch umkehrst, entscheidest du selbst.`;
+ $('qResult').value='';$('qFb').textContent='';$('qNext').classList.add('hidden');$('qAutoAnswer').textContent='';$('qAutoAnswer').classList.add('hidden');
+}
+function qload(){
+ if(!qq.length||qi>=qq.length){qq=levelPool(ratioTasks,'story').sort(()=>Math.random()-.5);qi=0}
+ qt=qq[qi];qtype=null;fillFiveSizeSelects('qX','qY',qt);
+ $('qStory').textContent=qt.story;$('qX').value='';$('qY').value='';
+ document.querySelectorAll('.qType').forEach(b=>b.classList.remove('selected'));
+ $('qFb0').textContent='';$('qWork').classList.add('hidden');$('qNext').classList.add('hidden');
+}
+
+document.querySelectorAll('.qType').forEach(b=>b.onclick=()=>{qtype=b.dataset.v;document.querySelectorAll('.qType').forEach(x=>x.classList.toggle('selected',x===b))});
+$('qCheck0').onclick=()=>{
+ const ok=$('qX').value===qt.x&&$('qY').value===qt.y&&qtype===qt.t;
+ $('qFb0').className='feedback '+(ok?'ok':'bad');
+ $('qFb0').textContent=ok?'Richtig.':'Prüfe deine Angaben noch einmal.';
+ if(ok){$('qWork').classList.remove('hidden');qRender()}else $('qWork').classList.add('hidden');
+};
+$('qReciprocal').onclick=()=>{
+ const cInput=$('qCBox').querySelector('input');
+ const dInput=$('qDBox').querySelector('input');
+ if(!cInput||!dInput)return;
+
+ // Nur die aktuellen Eingaben und die zugehörige Ziel-Markierung vertauschen.
+ // Dadurch bleiben Zahlen bzw. ein vom Schüler gesetztes x vollständig erhalten.
+ const cValue=cInput.value;
+ const dValue=dInput.value;
+ const cExpected=cInput.dataset.expected;
+ const dExpected=dInput.dataset.expected;
+ const cTarget=cInput.dataset.target;
+ const dTarget=dInput.dataset.target;
+
+ cInput.value=dValue;
+ dInput.value=cValue;
+ cInput.dataset.expected=dExpected;
+ dInput.dataset.expected=cExpected;
+ cInput.dataset.target=dTarget;
+ dInput.dataset.target=cTarget;
+
+ qFlipped=!qFlipped;
+ $('qReciprocal').classList.toggle('done',qFlipped);
+ $('qReciprocal').textContent=qFlipped?'Kehrwert gebildet':'Kehrwert des rechten Bruches bilden';
+};
+$('qComma').onclick=()=>{
+ const el=$('qResult'); if(el.value.includes(',')||el.value.includes('.'))return;
+ const a=el.selectionStart??el.value.length,z=el.selectionEnd??a;
+ el.value=el.value.slice(0,a)+','+el.value.slice(z);el.focus();el.setSelectionRange(a+1,a+1);
+};
+$('qCheck').onclick=()=>{
+ const fields=[...$('ratioTrainer').querySelectorAll('.qEquation input')];
+ const xFields=fields.filter(i=>i.value.trim().toLowerCase()==='x');
+ const targetField=fields.find(i=>i.dataset.target==='1');
+ const xOK=xFields.length===1 && xFields[0]===targetField;
+ const knownOK=fields.filter(i=>i!==targetField).every(i=>req(rn(i.value),Number(i.dataset.expected)));
+ const flipOK=qt.t==='anti'?qFlipped:!qFlipped;
+ const resultOK=req(rn($('qResult').value),qt.v[qt.answerCol==='x'?4:5]);
+ const ok=xOK&&knownOK&&flipOK&&resultOK;
+ $('qFb').className='feedback '+(ok?'ok':'bad');
+ const equationOK=xOK&&knownOK&&flipOK;
+ $('qFb').textContent=ok
+   ?'Richtig.'
+   :(equationOK&&!resultOK
+      ?'Prüfe dein Ergebnis noch einmal.'
+      :'Prüfe die Verhältnisgleichung und dein Ergebnis noch einmal.');
+ $('qNext').classList.toggle('hidden',!ok);
+ if(ok){
+   $('qAutoAnswer').textContent='Antwort: '+qt.answer;
+   $('qAutoAnswer').classList.remove('hidden');
+ }else{
+   $('qAutoAnswer').textContent='';
+   $('qAutoAnswer').classList.add('hidden');
+ }
+};
+$('qNext').onclick=()=>{qi++;qload()};
+$('mode4Btn').onclick=()=>{
+ $('trainer').classList.add('hidden');$('valueTrainer').classList.add('hidden');$('diagramTrainer').classList.add('hidden');$('ruleThreeTrainer').classList.add('hidden');$('ratioTrainer').classList.remove('hidden');$('recognizeSubnav').classList.add('hidden');
+ ['mode1Btn','mode2Btn','mode3Btn'].forEach(id=>$(id).classList.remove('active'));$('mode4Btn').classList.add('active');qload();
+};
+
+</script></body></html>
