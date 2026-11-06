@@ -1156,13 +1156,27 @@ $('qCheck').onclick=()=>{
  const fields=[...$('ratioTrainer').querySelectorAll('.qEquation input')];
  const xFields=fields.filter(i=>i.value.trim().toLowerCase()==='x');
  const targetField=fields.find(i=>i.dataset.target==='1');
- const xOK=xFields.length===1 && xFields[0]===targetField;
- const knownOK=fields.filter(i=>i!==targetField).every(i=>req(rn(i.value),Number(i.dataset.expected)));
- const flipOK=qt.t==='anti'?qFlipped:!qFlipped;
- const resultOK=req(rn($('qResult').value),qt.v[qt.answerCol==='x'?4:5]);
- const ok=xOK&&knownOK&&flipOK&&resultOK;
+ const answer=qt.v[qt.answerCol==='x'?4:5];
+ const resultOK=req(rn($('qResult').value),answer);
+ let equationOK;
+ if(qt.t==='prop'){
+   /* Proportional: Jede richtige Verhältnisgleichung zählt, z. B. x1 : x2 = y1 : y2
+      oder x1 : y1 = x2 : y2. Geprüft wird: genau ein x, die drei gegebenen Werte
+      und eine wahre Gleichung, wenn man für x das richtige Ergebnis einsetzt. */
+   const vals=fields.map(i=>i.value.trim().toLowerCase());
+   const known=[qt.v[0],qt.v[1],qt.answerCol==='x'?qt.v[5]:qt.v[4]].sort((a,b)=>a-b);
+   const entered=vals.filter(v=>v!=='x').map(rn).sort((a,b)=>a-b);
+   const valuesOK=xFields.length===1&&entered.length===3&&entered.every((v,k)=>req(v,known[k]));
+   const [a,b,c,d]=vals.map(v=>v==='x'?answer:rn(v));
+   const trueEq=[a,b,c,d].every(Number.isFinite)&&b!==0&&d!==0&&Math.abs(a*d-b*c)<1e-6*Math.max(1,Math.abs(a*d));
+   equationOK=valuesOK&&trueEq;
+ }else{
+   const xOK=xFields.length===1 && xFields[0]===targetField;
+   const knownOK=fields.filter(i=>i!==targetField).every(i=>req(rn(i.value),Number(i.dataset.expected)));
+   equationOK=xOK&&knownOK&&qFlipped;
+ }
+ const ok=equationOK&&resultOK;
  $('qFb').className='feedback '+(ok?'ok':'bad');
- const equationOK=xOK&&knownOK&&flipOK;
  $('qFb').textContent=ok
    ?'Richtig.'
    :(equationOK&&!resultOK
