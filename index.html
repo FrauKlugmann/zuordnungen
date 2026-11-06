@@ -1,4 +1,11 @@
-<!doctype html><html lang="de"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Trainer Zuordnungen</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-title" content="Zuordnungen">
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+</head>
+<body>
+<title>Trainer Zuordnungen</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-title" content="Zuordnungen">
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f5f7;color:#171717}.topnav{background:white;border-bottom:1px solid #bbb;padding:12px max(18px,calc(50vw - 510px));position:sticky;top:0;z-index:5}h1{font-size:22px;margin:0 16px 0 0}button{font:inherit;border:1px solid #777;border-radius:9px;background:white;padding:10px 14px;cursor:pointer}.active,.primary{background:#222;color:white}.disabled{opacity:.45}main{max-width:1050px;margin:22px auto;padding:0 15px}.panel{background:white;border:1px solid #bbb;border-radius:14px;padding:22px}.intro{font-size:17px;line-height:1.45}.progress{font-weight:bold;margin:18px 0 10px}.values{border-collapse:collapse;width:min(760px,100%);font-size:20px;margin:12px 0 24px}.values td{border:2px solid #333;padding:12px;text-align:center;min-width:80px}.values td:first-child{font-weight:bold;min-width:55px}.step{border-top:1px solid #ddd;margin-top:18px;padding-top:18px}.step h2{font-size:19px}.choices{display:flex;gap:10px;flex-wrap:wrap}.choice.selected{background:#dce8fb;border:2px solid #2b5dab}.choice.correct{background:#e8f5e9;border:2px solid #398744}.choice.wrong{background:#ffebee;border:2px solid #b53a45}.hidden{display:none}.calc{display:grid;grid-template-columns:175px repeat(4,1fr);gap:8px;align-items:center;max-width:900px}.calc input{width:100%;padding:9px;font:inherit;text-align:center;border:1px solid #777;border-radius:7px}
 .input-wrap{display:flex;gap:4px;align-items:stretch;min-width:0}
@@ -150,9 +157,25 @@ header.brand h1{margin:0 0 5px;font-size:29px}header.brand p{margin:0}
 @media(max-width:560px){.logo{width:48px;height:48px;border-radius:11px}header.brand h1{font-size:24px}}
 footer{max-width:1050px;margin:10px auto 26px;padding:0 15px;text-align:right;color:#555;font-size:14px}
 </style>
-</head><body>
+<style id="stairsCss">
+/* Treppe: Stufe 1 unten, jede höhere Stufe etwas nach rechts versetzt */
+.topnav{position:static}
+.modeRow{display:none !important}
+.recognizeSubnav{display:none !important}
+.stairsIntro{margin:2px 0 10px;color:#444;font-size:15px}
+.stairs{display:flex;flex-direction:column-reverse;gap:8px;max-width:900px}
+.stairBtn{width:62%;margin-left:calc(var(--i) * 9.5%);display:flex;align-items:center;justify-content:space-between;gap:10px;text-align:left;
+  background:#4a4a4a;border:2px solid #4a4a4a;color:#fff;font-weight:700;border-radius:10px;padding:10px 14px;min-height:48px;line-height:1.25}
+.stairBtn:hover{background:#3a3a3a;border-color:#3a3a3a}
+.stairBtn.done{background:#167c80;border-color:#167c80}
+.stairBtn.done:hover{background:#126b6f;border-color:#126b6f}
+.stairBtn.current{outline:4px solid #12365b;outline-offset:3px}
+.stairBtn .stairCount{flex:0 0 auto;font-size:13px;font-weight:700;background:rgba(255,255,255,.18);border-radius:999px;padding:3px 9px;white-space:nowrap}
+.stairBtn:focus-visible{outline:4px solid #e84f9a;outline-offset:3px}
+@media(max-width:640px){.stairBtn{width:76%;margin-left:calc(var(--i) * 6%);font-size:14px}}
+</style>
 <header class="brand"><img class="logo" src="apple-touch-icon.png" alt=""><div><h1>Trainer Zuordnungen</h1><p>Emil-Petri-Schule Arnstadt</p></div></header>
-<nav class="topnav"><div class="levelRow"><strong>Stufe:</strong><button id="levelSupportBtn" class="levelBtn active" type="button">Lernförderstufe</button><button id="levelRegularBtn" class="levelBtn" type="button">Regelschulstufe</button></div><div class="modeRow"><button id="mode1Btn" class="active">1 · Zuordnungen erkennen</button><button id="mode2Btn">2 · Wertetabellen ergänzen</button><button id="mode3Btn">3 · Dreisatz</button><button id="mode4Btn">4 · Verhältnisgleichung</button></div></nav>
+<nav class="topnav"><div class="levelRow"><strong>Stufe:</strong><button id="levelSupportBtn" class="levelBtn active" type="button">Lernförderstufe</button><button id="levelRegularBtn" class="levelBtn" type="button">Regelschulstufe</button></div><p class="stairsIntro">Arbeite dich Stufe für Stufe nach oben. Eine Stufe wird grün, sobald du dort mindestens 5 Aufgaben gelöst hast.</p><div class="stairs" id="stairs"></div><div class="modeRow"><button id="mode1Btn" class="active">1 · Zuordnungen erkennen</button><button id="mode2Btn">2 · Wertetabellen ergänzen</button><button id="mode3Btn">3 · Dreisatz</button><button id="mode4Btn">4 · Verhältnisgleichung</button></div></nav>
 <main><div id="recognizeSubnav" class="recognizeSubnav">
   <button id="subTableBtn" class="subMode active" type="button">aus der Wertetabelle</button>
   <button id="subDiagramBtn" class="subMode" type="button">aus dem Diagramm</button>
@@ -386,10 +409,11 @@ function setSchoolLevel(level){
  $('levelSupportBtn').classList.toggle('active',level==='support');
  $('levelRegularBtn').classList.toggle('active',level==='regular');
  resetForLevel();
+ renderStairs();
 }
 $('levelSupportBtn').onclick=()=>setSchoolLevel('support');
 $('levelRegularBtn').onclick=()=>setSchoolLevel('regular');
-function render(){let t=order[i];decision=null;$('tbl').innerHTML=`<table class="values"><tr><td>x</td>${t.x.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr><tr><td>y</td>${t.y.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr></table>`;document.querySelectorAll('.choice').forEach(b=>b.classList.remove('selected','correct','wrong'));$('guessStep').classList.add('hidden');$('methodStep').classList.add('hidden');$('calcStep').classList.add('hidden');$('decStep').classList.add('hidden');$('trendFb').innerHTML='';$('methodFb').innerHTML='';$('methodFbInline').innerHTML='';$('methodFbInline').className='';$('decFb').innerHTML='';window.currentTrend=null;window.currentGuess=null;window.currentMethod=null;$('calc').innerHTML=`<div></div>${t.x.map((_,j)=>`<div class="head">Spalte ${j+1}</div>`).join('')}<div class="formula factor-label">Proportionalitäts-<br>faktor</div>${t.x.map((_,j)=>`<div class="input-wrap"><input inputmode="decimal" data-i="${j}"><button type="button" class="comma-btn" aria-label="Komma eingeben">,</button></div>`).join('')}`}
+function render(){window._s1=false;let t=order[i];decision=null;$('tbl').innerHTML=`<table class="values"><tr><td>x</td>${t.x.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr><tr><td>y</td>${t.y.map(v=>`<td>${fmt(v)}</td>`).join('')}</tr></table>`;document.querySelectorAll('.choice').forEach(b=>b.classList.remove('selected','correct','wrong'));$('guessStep').classList.add('hidden');$('methodStep').classList.add('hidden');$('calcStep').classList.add('hidden');$('decStep').classList.add('hidden');$('trendFb').innerHTML='';$('methodFb').innerHTML='';$('methodFbInline').innerHTML='';$('methodFbInline').className='';$('decFb').innerHTML='';window.currentTrend=null;window.currentGuess=null;window.currentMethod=null;$('calc').innerHTML=`<div></div>${t.x.map((_,j)=>`<div class="head">Spalte ${j+1}</div>`).join('')}<div class="formula factor-label">Proportionalitäts-<br>faktor</div>${t.x.map((_,j)=>`<div class="input-wrap"><input inputmode="decimal" data-i="${j}"><button type="button" class="comma-btn" aria-label="Komma eingeben">,</button></div>`).join('')}`}
 
 $('trendChoices').onclick=e=>{
   let b=e.target.closest('.choice');if(!b)return;
@@ -548,7 +572,7 @@ $('checkDec').onclick=()=>{
        :'Prüfe alle vier Spalten.';
    }
  }
- if(accepted)score++;
+ if(accepted){score++;if(!window._s1){window._s1=true;bumpStair(1);}}
  $('decFb').className='feedback '+(accepted?'ok':'bad');
  $('decFb').innerHTML=(accepted?'Richtig. ':'Diese Entscheidung ist mit deinen bisherigen Rechnungen noch nicht ausreichend begründet. ')+explanation+
  `<div class="actions"><button id="next" class="primary">${i<order.length-1?'Nächste Aufgabe':'Auswertung'}</button></div>`;
@@ -596,7 +620,7 @@ function currentK(t){
 }
 function renderValueTask(){
  if(!vOrder.length || vi>=vOrder.length){vOrder=levelPool(valueTasks,'value').sort(()=>Math.random()-.5);vi=0;}
- const t=vOrder[vi];
+ window._s3=false;const t=vOrder[vi];
  $('vType').textContent=t.type==='prop'?'Proportionale Zuordnung':'Antiproportionale Zuordnung';
  $('helpBtn').classList.add('hidden');
  $('kInput').value='';$('kInput').className='';$('kFb').className='';$('kFb').textContent='';
@@ -639,7 +663,7 @@ $('vCheck').onclick=()=>{
    if(!ok)all=false;
  });
  if(all){
-   $('vFb').className='feedback ok';$('vFb').textContent='Richtig.';
+   if(!window._s3){window._s3=true;bumpStair(3);}$('vFb').className='feedback ok';$('vFb').textContent='Richtig.';
    $('helpBtn').classList.add('hidden');
    $('vNext').classList.remove('hidden');
  }else{
@@ -781,7 +805,7 @@ function dStep(max){
 }
 function dRender(){
  if(!dOrder.length||dIndex>=dOrder.length)dShuffle();
- dTask=dOrder[dIndex];dPlaced=[];dChoice=null;dShapeChoice=null;dShowGraph=false;
+ window._s2=false;dTask=dOrder[dIndex];dPlaced=[];dChoice=null;dShapeChoice=null;dShowGraph=false;
  $('dPointFb').textContent='';$('dPointFb').className='';
  $('dDecisionFb').textContent='';$('dDecisionFb').className='';
  $('dShapeFb').textContent='';$('dShapeFb').className='';$('dTypeStep').classList.add('hidden');document.querySelectorAll('input[name="dShape"]').forEach(x=>x.checked=false);
@@ -898,7 +922,7 @@ $('dCheckShape').onclick=()=>{
 document.querySelectorAll('#dChoices .choice').forEach(b=>b.onclick=()=>{dChoice=b.dataset.v;document.querySelectorAll('#dChoices .choice').forEach(x=>x.classList.toggle('selected',x===b))});
 $('dCheckDecision').onclick=()=>{
  if(!dChoice){$('dDecisionFb').className='feedback bad';$('dDecisionFb').textContent='Wähle zuerst eine Zuordnungsart.';return}
- if(dChoice===dTask.type){$('dDecisionFb').className='feedback ok';$('dDecisionFb').textContent='Richtig.';$('dNext').classList.remove('hidden')}
+ if(dChoice===dTask.type){if(!window._s2){window._s2=true;bumpStair(2);}$('dDecisionFb').className='feedback ok';$('dDecisionFb').textContent='Richtig.';$('dNext').classList.remove('hidden')}
  else{$('dDecisionFb').className='feedback bad';$('dDecisionFb').textContent='Prüfe deine Entscheidung noch einmal.'}
 };
 $('dNext').onclick=()=>{dIndex++;dRender()};
@@ -967,7 +991,7 @@ function rCalcOK(from,to,op,n){
 }
 function rload(){
  if(!rq.length||ri>=rq.length){rq=levelPool(ruleTasks,'story').sort(()=>Math.random()-.5);ri=0}
- rt=rq[ri];rtype=null;fillFiveSizeSelects('rX','rY',rt);$('rStory').textContent=rt.story;
+ window._s4=false;rt=rq[ri];rtype=null;fillFiveSizeSelects('rX','rY',rt);$('rStory').textContent=rt.story;
  document.querySelectorAll('.rType').forEach(b=>b.classList.remove('selected'));
  $('rWork').classList.add('hidden');$('rNext').classList.add('hidden');$('rAutoAnswer').classList.add('hidden');$('rAutoAnswer').textContent='';$('r31').closest('td').classList.remove('rAnswerCell');$('r32').closest('td').classList.remove('rAnswerCell');
  ['r11','r12','r21','r22','r31','r32','rL1n','rL2n','rR1n','rR2n'].forEach(i=>$(i).value='');
@@ -987,6 +1011,7 @@ $('rCheckTable').onclick=()=>{
  $('rTableFb').className='feedback '+(ok?'ok':'bad');
  $('rTableFb').textContent=ok?'Richtig – Dreisatz vollständig gelöst.':(!vals?'Prüfe die Werte in der Tabelle noch einmal.':'Prüfe die Rechenoperationen an den Bögen noch einmal.');
  if(ok){
+   if(!window._s4){window._s4=true;bumpStair(4);}
    $('rNext').classList.remove('hidden');
    const cell=(rt.answerCol==='x' ? $('r31') : $('r32')).closest('td');
    cell.classList.add('rAnswerCell');
@@ -1084,7 +1109,7 @@ function qRender(){
 }
 function qload(){
  if(!qq.length||qi>=qq.length){qq=levelPool(ratioTasks,'story').sort(()=>Math.random()-.5);qi=0}
- qt=qq[qi];qtype=null;fillFiveSizeSelects('qX','qY',qt);
+ window._s5=false;qt=qq[qi];qtype=null;fillFiveSizeSelects('qX','qY',qt);
  $('qStory').textContent=qt.story;$('qX').value='';$('qY').value='';
  document.querySelectorAll('.qType').forEach(b=>b.classList.remove('selected'));
  $('qFb0').textContent='';$('qWork').classList.add('hidden');$('qNext').classList.add('hidden');
@@ -1145,6 +1170,7 @@ $('qCheck').onclick=()=>{
       :'Prüfe die Verhältnisgleichung und dein Ergebnis noch einmal.');
  $('qNext').classList.toggle('hidden',!ok);
  if(ok){
+   if(!window._s5){window._s5=true;bumpStair(5);}
    $('qAutoAnswer').textContent='Antwort: '+qt.answer;
    $('qAutoAnswer').classList.remove('hidden');
  }else{
@@ -1158,4 +1184,38 @@ $('mode4Btn').onclick=()=>{
  ['mode1Btn','mode2Btn','mode3Btn'].forEach(id=>$(id).classList.remove('active'));$('mode4Btn').classList.add('active');qload();
 };
 
-</script></body></html>
+/* ---------- Treppe ---------- */
+const STAIRS=[
+ {n:1,label:'Zuordnungen erkennen aus der Wertetabelle',go:()=>{$('mode1Btn').click();$('subTableBtn').click();}},
+ {n:2,label:'Zuordnungen erkennen aus dem Diagramm',go:()=>{$('mode1Btn').click();$('subDiagramBtn').click();}},
+ {n:3,label:'Wertetabellen ergänzen',go:()=>$('mode2Btn').click()},
+ {n:4,label:'Dreisatz',go:()=>$('mode3Btn').click()},
+ {n:5,label:'Verhältnisgleichung',go:()=>$('mode4Btn').click()}
+];
+const STAIR_GOAL=5;
+function stairKey(){return 'zuordnungen-treppe';}
+function stairCounts(){try{return JSON.parse(localStorage.getItem(stairKey())||'{}')||{};}catch(e){return {};}}
+function bumpStair(n){const c=stairCounts();c[n]=(c[n]||0)+1;try{localStorage.setItem(stairKey(),JSON.stringify(c));}catch(e){}renderStairs();}
+function currentStair(){
+ if($('mode1Btn').classList.contains('active'))return $('subDiagramBtn').classList.contains('active')?2:1;
+ if($('mode2Btn').classList.contains('active'))return 3;
+ if($('mode3Btn').classList.contains('active'))return 4;
+ if($('mode4Btn').classList.contains('active'))return 5;
+ return 1;
+}
+function renderStairs(){
+ const c=stairCounts(),cur=currentStair(),box=$('stairs');box.innerHTML='';
+ STAIRS.forEach((s,k)=>{
+   const n=c[s.n]||0,done=n>=STAIR_GOAL,b=document.createElement('button');
+   b.type='button';b.className='stairBtn'+(done?' done':'')+(s.n===cur?' current':'');b.style.setProperty('--i',k);
+   b.setAttribute('aria-pressed',String(s.n===cur));
+   b.innerHTML='<span>'+s.n+' · '+s.label+'</span><span class="stairCount">'+(done?'✓ '+n+' gelöst':n+' von '+STAIR_GOAL)+'</span>';
+   b.onclick=()=>{s.go();renderStairs();};
+   box.appendChild(b);
+ });
+}
+renderStairs();
+
+</script>
+</body>
+</html>
