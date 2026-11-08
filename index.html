@@ -3,9 +3,12 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
 </head>
 <body>
-<title>Trainer Zuordnungen</title><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-title" content="Zuordnungen">
+
+<title>Trainer Zuordnungen</title>
+<meta name="claude:viewport-fit-sides" content="cover"><link rel="apple-touch-icon" href="apple-touch-icon.png"><link rel="icon" type="image/png" href="apple-touch-icon.png"><meta name="apple-mobile-web-app-title" content="Zuordnungen">
 <style>
 *{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#f3f5f7;color:#171717}.topnav{background:white;border-bottom:1px solid #bbb;padding:12px max(18px,calc(50vw - 510px));position:sticky;top:0;z-index:5}h1{font-size:22px;margin:0 16px 0 0}button{font:inherit;border:1px solid #777;border-radius:9px;background:white;padding:10px 14px;cursor:pointer}.active,.primary{background:#222;color:white}.disabled{opacity:.45}main{max-width:1050px;margin:22px auto;padding:0 15px}.panel{background:white;border:1px solid #bbb;border-radius:14px;padding:22px}.intro{font-size:17px;line-height:1.45}.progress{font-weight:bold;margin:18px 0 10px}.values{border-collapse:collapse;width:min(760px,100%);font-size:20px;margin:12px 0 24px}.values td{border:2px solid #333;padding:12px;text-align:center;min-width:80px}.values td:first-child{font-weight:bold;min-width:55px}.step{border-top:1px solid #ddd;margin-top:18px;padding-top:18px}.step h2{font-size:19px}.choices{display:flex;gap:10px;flex-wrap:wrap}.choice.selected{background:#dce8fb;border:2px solid #2b5dab}.choice.correct{background:#e8f5e9;border:2px solid #398744}.choice.wrong{background:#ffebee;border:2px solid #b53a45}.hidden{display:none}.calc{display:grid;grid-template-columns:175px repeat(4,1fr);gap:8px;align-items:center;max-width:900px}.calc input{width:100%;padding:9px;font:inherit;text-align:center;border:1px solid #777;border-radius:7px}
 .input-wrap{display:flex;gap:4px;align-items:stretch;min-width:0}
@@ -174,6 +177,114 @@ footer{max-width:1050px;margin:10px auto 26px;padding:0 15px;text-align:right;co
 .stairBtn:focus-visible{outline:4px solid #e84f9a;outline-offset:3px}
 @media(max-width:640px){.stairBtn{width:76%;margin-left:calc(var(--i) * 6%);font-size:14px}}
 </style>
+<style id="levelspielCss">
+:root{color-scheme:light}
+html{background:#0f2f45}
+body{background:
+   linear-gradient(rgba(255,255,255,.045) 1px,transparent 1px) 0 0/28px 28px,
+   linear-gradient(90deg,rgba(255,255,255,.045) 1px,transparent 1px) 0 0/28px 28px,
+   radial-gradient(1000px 520px at 85% -10%,#2f8f95 0%,transparent 60%),
+   linear-gradient(180deg,#0f2f45 0%,#12465a 55%,#145560 100%) fixed;color:#171717;min-height:100vh;
+   padding-left:max(0px,env(safe-area-inset-left,0px));padding-right:max(0px,env(safe-area-inset-right,0px))}
+header.brand,nav.topnav{display:none!important}
+#rNext,#qNext,#vNext,#dNext,#next{display:none!important}
+.lsTop,#lsHome,.lsBar,main,#lsEnde,footer{max-width:1050px;margin-left:auto;margin-right:auto;padding-left:16px;padding-right:16px}
+.lsTop{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;padding-top:20px;color:#fff}
+.lsSchule{font-size:12px;letter-spacing:.14em;color:#a9d6d8}
+.lsH1{margin:4px 0 0;font-size:clamp(26px,4.5vw,40px);color:#fff}.lsH1 span{color:#ffd54a}
+.lsZw{display:flex;gap:10px;flex-wrap:wrap}
+.lsPill{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.1);border:1.5px solid rgba(255,255,255,.25);border-radius:999px;padding:7px 16px;font-weight:700;font-size:20px;color:#fff;transition:transform .25s}
+.lsPill small{font-size:15px;font-weight:700}
+.lsPill svg{width:30px;height:30px}
+.lsPill.puls{transform:scale(1.22);box-shadow:0 0 30px rgba(255,213,74,.7)}
+#lsHome{color:#fff;padding-top:8px;padding-bottom:10px}
+.lsSub{color:#d6eef0;margin:12px 0 20px;font-size:17px;line-height:1.45;max-width:900px}
+.lsLevels{position:relative;display:flex;flex-direction:column;gap:20px;padding-left:70px}
+.lsLevels:before{content:"";position:absolute;left:30px;top:40px;bottom:40px;border-left:4px dashed rgba(255,255,255,.25)}
+.lsLv{position:relative;border-radius:22px;padding:16px 22px;background:rgba(255,255,255,.08);border:1.5px solid rgba(255,255,255,.2)}
+.lsLv .lsBadge{position:absolute;left:-70px;top:16px;width:60px;height:60px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:25px;background:#1f5f6e;border:3px solid rgba(255,255,255,.35);color:#fff}
+.lsLv.voll{border:2px solid rgba(255,213,74,.7)} .lsLv.voll .lsBadge{background:#ffd54a;color:#123;border-color:#fff}
+.lsKopf{display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap}
+.lsTag{font-size:13px;letter-spacing:.18em;color:#ffd54a;font-weight:700}
+.lsKopf h2{margin:2px 0 0;font-size:24px;color:#fff}
+.lsKlein{font-size:14px;color:#a9d6d8}
+.lsZahl{display:flex;align-items:center;gap:6px;color:#eef;font-size:15px}.lsZahl svg{width:20px;height:20px}
+.lsBahn{position:relative;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;margin:14px auto 0;max-width:640px}
+.lsBahn .lsLinie{position:absolute;left:25%;right:25%;top:42px;height:6px;border-radius:3px;background:rgba(255,255,255,.2)}
+.lsBahn .lsLinie i{display:block;height:100%;border-radius:3px;background:#ffd54a}
+.lsNode{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;color:#fff;min-width:0}
+.lsKreis{width:86px;height:86px;border-radius:50%;display:grid;place-items:center;font-size:27px;font-weight:800;background:#fff;color:#123;border:4px solid rgba(255,255,255,.6);cursor:pointer;padding:0}
+.lsNode.fertig .lsKreis{background:radial-gradient(circle at 35% 30%,#ffe98a,#f5b400);color:#5a3b00;border-color:#fff3c4}
+.lsNode.jetzt .lsKreis{border-color:#ffd54a;box-shadow:0 0 0 9px rgba(255,213,74,.25),0 0 30px rgba(255,213,74,.7);animation:lsPuls 2s ease-in-out infinite}
+@keyframes lsPuls{50%{box-shadow:0 0 0 14px rgba(255,213,74,.12),0 0 40px rgba(255,213,74,.9)}}
+.lsNode b{font-size:16px}
+.lsSterne{display:flex;gap:3px;align-items:center;flex-wrap:wrap;justify-content:center}.lsSterne svg{width:27px;height:27px}
+.lsBonus{font-size:13px;font-weight:700;color:#123;background:#ffe98a;border-radius:999px;padding:2px 9px;margin-left:4px}
+.lsBtn{font:inherit;cursor:pointer;border:0;background:#1fae8c;color:#fff;font-weight:800;font-size:16px;border-radius:999px;padding:9px 20px;box-shadow:0 5px 0 #0d6b55;touch-action:manipulation}
+.lsBtn:active{transform:translateY(3px);box-shadow:0 2px 0 #0d6b55}
+.lsBtn.hell{background:rgba(255,255,255,.16);box-shadow:0 5px 0 rgba(0,0,0,.3)}
+.lsBtn.gold{background:#ffd54a;color:#123;box-shadow:0 5px 0 #b88a00}
+.lsBtn.grau{background:#eef2f3;color:#123;box-shadow:0 5px 0 #b9c6c9}
+.lsBoss{background:linear-gradient(135deg,rgba(220,60,60,.22),rgba(255,213,74,.10));border:1.5px dashed rgba(255,120,120,.7)}
+.lsBoss .lsBadge{background:#7a1f2b}
+.lsBoss.zu{opacity:.7}
+.lsBoss.offen{border:2px solid #ff7a7a;box-shadow:0 0 40px rgba(255,90,90,.3)} .lsBoss.offen .lsBadge{background:#d23a3a}
+.lsBossRow{display:flex;align-items:center;gap:14px;margin-top:12px;flex-wrap:wrap}
+.lsLehrer{margin-top:22px;border:1.5px dashed rgba(255,255,255,.25);border-radius:12px;padding:8px 14px;color:#a9d6d8}
+.lsLehrer summary{cursor:pointer}
+.lsLehrerRow{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-top:10px}
+.lsLehrer input{font:inherit;border:2px solid rgba(255,255,255,.3);background:rgba(0,0,0,.25);color:#fff;border-radius:10px;padding:8px 12px;width:12em}
+.lsBar{display:flex;flex-wrap:wrap;gap:12px;justify-content:space-between;align-items:center;color:#fff;margin-top:14px}
+.lsBar .lsTitel{font-weight:700;font-size:18px}.lsBar .lsTitel small{display:block;font-weight:400;color:#a9d6d8;font-size:14px}
+.lsDots{display:flex;gap:7px;align-items:center}
+.lsDot{width:20px;height:20px;border-radius:50%;border:2px solid rgba(255,255,255,.4)}
+.lsDot.ok{background:#3fd08a;border-color:#3fd08a}.lsDot.now{border-color:#ffd54a;box-shadow:0 0 10px #ffd54a}
+.lsKorr{background:rgba(255,255,255,.12);border-radius:999px;padding:5px 12px;font-size:15px}
+.lsKorr.zuviel{background:rgba(255,107,107,.3)}
+main{margin-top:14px}
+main .panel{border-radius:20px;box-shadow:0 20px 50px rgba(0,0,0,.3);border:0}
+.lsWeiter{display:flex;justify-content:center;margin:16px 0 4px}
+.lsWeiter.hidden,.lsBar.hidden,#lsHome.hidden,#lsEnde.hidden,main.hidden{display:none!important}
+#lsEnde{margin-top:14px}
+.lsErg{background:#fff;border-radius:20px;padding:26px 20px;text-align:center;box-shadow:0 20px 50px rgba(0,0,0,.3);display:flex;flex-direction:column;gap:14px;align-items:center}
+.lsErg .lsGross{display:flex;gap:10px}.lsErg .lsGross svg{width:64px;height:64px}
+.lsErg p{margin:0;font-size:20px;font-weight:700;color:#123}
+.lsTopf{display:flex;align-items:center;gap:6px;color:#123}
+.lsTopf i{width:16px;height:16px;border-radius:50%;border:2px solid #f2a900;display:inline-block}.lsTopf i.voll{background:#ffd23f}
+.lsTopf svg{width:30px;height:30px}
+.lsBanner{background:linear-gradient(90deg,#ffd54a,#ffe98a);color:#123;font-weight:800;border-radius:14px;padding:10px 16px}
+.lsRow{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+footer{color:#a9d6d8!important;font-style:italic}
+.lsFlug{position:fixed;left:50%;top:45%;width:170px;height:170px;margin:-85px 0 0 -85px;z-index:2000;pointer-events:none;filter:drop-shadow(0 0 25px rgba(255,213,74,.9))}
+.lsMflug{position:fixed;left:50%;top:45%;width:200px;height:200px;margin:-100px 0 0 -100px;z-index:2000;pointer-events:none;perspective:600px}
+.lsMflug svg{width:100%;height:100%;filter:drop-shadow(0 0 22px rgba(255,213,74,.9))}
+.lsGlitzer{position:fixed;z-index:1999;width:10px;height:10px;border-radius:50%;background:#fff3b0;pointer-events:none;box-shadow:0 0 12px #ffd54a}
+/* Gerüst: ab 2 Sternen keine Hilfen mehr */
+body.g2 #helpBtn,body.g2 .vHint,body.g2 #guessStep .small,body.g2 #qEqHint{display:none!important}
+@media (max-width:640px){.lsLevels{padding-left:0}.lsLevels:before{display:none}.lsLv .lsBadge{position:static;width:44px;height:44px;font-size:18px;margin-bottom:8px}.lsKreis{width:70px;height:70px;font-size:22px}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
+ <linearGradient id="gold" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff2a8"/><stop offset=".45" stop-color="#ffd23f"/><stop offset="1" stop-color="#f29a00"/></linearGradient>
+ <symbol id="st" viewBox="0 0 24 24"><path d="M12 2.6l2.75 5.9 6.45.75-4.8 4.4 1.3 6.35L12 16.8 6.3 20l1.3-6.35-4.8-4.4 6.45-.75z" stroke-linejoin="round"/></symbol>
+ <symbol id="credit" viewBox="0 0 300 300"><circle cx="150" cy="150" r="128" fill="#f2a900" stroke="#3a2200" stroke-width="7"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(266.0 150.0) rotate(0)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(262.0 180.0) rotate(15)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(250.5 208.0) rotate(30)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(232.0 232.0) rotate(45)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(208.0 250.5) rotate(60)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(180.0 262.0) rotate(75)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(150.0 266.0) rotate(90)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(120.0 262.0) rotate(105)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(92.0 250.5) rotate(120)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(68.0 232.0) rotate(135)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(49.5 208.0) rotate(150)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(38.0 180.0) rotate(165)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(34.0 150.0) rotate(180)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(38.0 120.0) rotate(195)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(49.5 92.0) rotate(210)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(68.0 68.0) rotate(225)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(92.0 49.5) rotate(240)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(120.0 38.0) rotate(255)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(150.0 34.0) rotate(270)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(180.0 38.0) rotate(285)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(208.0 49.5) rotate(300)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(232.0 68.0) rotate(315)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(250.5 92.0) rotate(330)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><rect x="-5" y="-8" width="10" height="16" rx="3" transform="translate(262.0 120.0) rotate(345)" fill="#ffd84d" stroke="#3a2200" stroke-width="2.5"/><circle cx="150" cy="150" r="104" fill="#ffd23f" stroke="#3a2200" stroke-width="5"/><path d="M226 78 A104 104 0 0 1 78 226 A120 120 0 0 0 226 78Z" fill="#f0a800" opacity=".9"/><path d="M78 96 A92 92 0 0 1 132 58" fill="none" stroke="#fff6c8" stroke-width="9" stroke-linecap="round"/><path d="M66 124 A92 92 0 0 1 70 112" fill="none" stroke="#fff6c8" stroke-width="9" stroke-linecap="round"/><g stroke="#3a2200" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="188" y1="188" x2="230" y2="230" stroke-width="22"/>
+        <line x1="188" y1="188" x2="228" y2="228" stroke="#c98500" stroke-width="12"/>
+        <circle cx="140" cy="140" r="58" fill="#fff4c2" stroke-width="8"/>
+        <circle cx="140" cy="140" r="58" fill="none" stroke="#e39a00" stroke-width="3"/>
+        <line x1="108" y1="172" x2="108" y2="104" stroke-width="3"/><line x1="108" y1="172" x2="176" y2="172" stroke-width="3"/>
+        <line x1="108" y1="172" x2="166" y2="112" stroke="#1a7f84" stroke-width="5"/>
+        <path d="M114 108 Q124 156 172 164" fill="none" stroke="#c0392b" stroke-width="5"/>
+        <path d="M110 112 A44 44 0 0 1 128 96" fill="none" stroke="#fff" stroke-width="6"/>
+      </g><path d="M0 -14 Q2 -2 14 0 Q2 2 0 14 Q-2 2 -14 0 Q-2 -2 0 -14Z" fill="#fff" transform="translate(212 92) scale(.8)"/></symbol>
+</defs></svg>
+<div class="lsTop">
+  <div><div class="lsSchule">EMIL-PETRI-SCHULE ARNSTADT · MATHEMATIK KLASSE 7</div><h1 class="lsH1">Trainer <span>Zuordnungen</span></h1></div>
+  <div class="lsZw"><div class="lsPill" id="lsSternPill" aria-label="Gesammelte Sterne"><svg><use href="#st" fill="url(#gold)" stroke="#b86e00" stroke-width="1.2"/></svg><span id="lsSterne">0</span></div>
+  <div class="lsPill" id="lsCreditPill" aria-label="Credits"><svg viewBox="0 0 300 300"><use href="#credit"/></svg><span id="lsCredits">0</span>&nbsp;<small id="lsCreditWort">Credits</small></div></div>
+</div>
+<div id="lsHome"></div>
+<div id="lsBar" class="lsBar hidden"></div>
 <header class="brand"><img class="logo" src="apple-touch-icon.png" alt=""><div><h1>Trainer Zuordnungen</h1><p>Emil-Petri-Schule Arnstadt</p></div></header>
 <nav class="topnav"><div class="levelRow"><strong>Stufe:</strong><button id="levelSupportBtn" class="levelBtn active" type="button">Lernförderstufe</button><button id="levelRegularBtn" class="levelBtn" type="button">Regelschulstufe</button></div><p class="stairsIntro">Arbeite dich Stufe für Stufe nach oben. Eine Stufe wird grün, sobald du dort mindestens 5 Aufgaben gelöst hast.</p><div class="stairs" id="stairs"></div><div class="modeRow"><button id="mode1Btn" class="active">1 · Zuordnungen erkennen</button><button id="mode2Btn">2 · Wertetabellen ergänzen</button><button id="mode3Btn">3 · Dreisatz</button><button id="mode4Btn">4 · Verhältnisgleichung</button></div></nav>
 <main><div id="recognizeSubnav" class="recognizeSubnav">
@@ -311,7 +422,8 @@ footer{max-width:1050px;margin:10px auto 26px;padding:0 15px;text-align:right;co
 </section>
 
 </main>
-<footer>Erstellt von Marion Klugmann (Oktober 2026) mit freundlicher Unterstützung von Claude.</footer>
+<div id="lsEnde" class="hidden"></div>
+<footer>Erstellt von Marion Klugmann (November 2026) mit freundlicher Unterstützung von Claude.</footer>
 <div id="helpOverlay" class="helpOverlay hidden" role="dialog" aria-modal="true" aria-labelledby="helpTitle">
   <div class="helpPopup">
     <button type="button" id="helpClose" class="helpClose" aria-label="Hilfe schließen">×</button>
@@ -440,7 +552,7 @@ $('checkTrend').onclick=()=>{
     $('guessStep').classList.remove('hidden');
   }else{
     $('trendFb').className='feedback bad';
-    $('trendFb').textContent='Schau noch einmal auf die Werte in der Tabelle.';
+    fehler();$('trendFb').textContent='Schau noch einmal auf die Werte in der Tabelle.';
     $('guessStep').classList.add('hidden');
     $('methodStep').classList.add('hidden');
     $('calcStep').classList.add('hidden');
@@ -467,7 +579,7 @@ $('checkMethod').onclick=()=>{
     b.classList.remove('correct','wrong');
     if(b.dataset.v===window.currentMethod)b.classList.add(ok?'correct':'wrong');
   });
-  if(!ok){
+  if(!ok){fehler();
     $('methodFbInline').className='feedback bad';
     $('methodFbInline').textContent=window.currentGuess==='prop'?'Richtig: y : x. Damit prüfst du auf Quotientengleichheit.':'Richtig: x · y. Damit prüfst du auf Produktgleichheit.';
     $('calcStep').classList.add('hidden');
@@ -514,7 +626,7 @@ $('checkDec').onclick=()=>{
  });
  if(!calculationsOK){
    $('decFb').className='feedback bad';
-   $('decFb').textContent='Mindestens ein eingetragener Proportionalitätsfaktor stimmt noch nicht. Prüfe die rot markierten Felder.';
+   fehler();$('decFb').textContent='Mindestens ein eingetragener Proportionalitätsfaktor stimmt noch nicht. Prüfe die rot markierten Felder.';
    return;
  }
 
@@ -535,12 +647,12 @@ $('checkDec').onclick=()=>{
  const guessFitsTrend=(trend==='same'&&window.currentGuess==='prop')||(trend==='opposite'&&window.currentGuess==='anti');
  if(decision==='neither' && firstTwoDiffer && t.type!=='neither'){
    $('decFb').className='feedback bad';
-   $('decFb').innerHTML='Deine Vermutung ist widerlegt – daraus folgt aber noch nicht „weder noch“. Wähle oben bei <strong>2. Vermutung</strong> die andere Zuordnungsart und prüfe noch einmal.';
+   fehler();$('decFb').innerHTML='Deine Vermutung ist widerlegt – daraus folgt aber noch nicht „weder noch“. Wähle oben bei <strong>2. Vermutung</strong> die andere Zuordnungsart und prüfe noch einmal.';
    return;
  }
  if(decision==='neither' && firstTwoDiffer && !guessFitsTrend){
    $('decFb').className='feedback bad';
-   $('decFb').innerHTML=trend==='same'
+   fehler();$('decFb').innerHTML=trend==='same'
      ?'Die Größen wachsen gemeinsam – eine antiproportionale Zuordnung war schon ausgeschlossen. Prüfe, ob eine <strong>proportionale</strong> Zuordnung vorliegt.'
      :'Wenn die eine Größe wächst, wird die andere kleiner – eine proportionale Zuordnung war schon ausgeschlossen. Prüfe, ob eine <strong>antiproportionale</strong> Zuordnung vorliegt.';
    return;
@@ -573,7 +685,7 @@ $('checkDec').onclick=()=>{
    }
  }
  if(accepted){score++;if(!window._s1){window._s1=true;bumpStair(1);}}
- $('decFb').className='feedback '+(accepted?'ok':'bad');
+ if(!accepted)fehler();$('decFb').className='feedback '+(accepted?'ok':'bad');
  $('decFb').innerHTML=(accepted?'Richtig. ':'Diese Entscheidung ist mit deinen bisherigen Rechnungen noch nicht ausreichend begründet. ')+explanation+
  `<div class="actions"><button id="next" class="primary">${i<order.length-1?'Nächste Aufgabe':'Auswertung'}</button></div>`;
  $('next').onclick=()=>{i++;if(i>=order.length){order=levelPool(tasks,'recognize').sort(()=>Math.random()-.5);i=0;} if(false){$('trainer').innerHTML=`<div class="summary"><h2>Training abgeschlossen</h2><div class="big">${score} / ${order.length}</div><p>richtig entschieden</p><button class="primary" onclick="location.reload()">Noch einmal trainieren</button></div>`}else{render();scrollTo(0,0)}};
@@ -613,13 +725,13 @@ const valueTasks=[
 ];
 let vOrder=[],vi=0,vScore=0;
 function shuffleValueTasks(){
- vOrder=levelPool(valueTasks,'value').sort(()=>Math.random()-.5);vi=0;vScore=0;
+ vOrder=levelPool(valueTasks,'value').filter(t=>!window.VTYP||t.type===window.VTYP).sort(()=>Math.random()-.5);vi=0;vScore=0;
 }
 function currentK(t){
  return t.type==='prop' ? t.y[0]/t.x[0] : t.x[0]*t.y[0];
 }
 function renderValueTask(){
- if(!vOrder.length || vi>=vOrder.length){vOrder=levelPool(valueTasks,'value').sort(()=>Math.random()-.5);vi=0;}
+ if(!vOrder.length || vi>=vOrder.length){vOrder=levelPool(valueTasks,'value').filter(t=>!window.VTYP||t.type===window.VTYP).sort(()=>Math.random()-.5);vi=0;}
  window._s3=false;const t=vOrder[vi];
  $('vType').textContent=t.type==='prop'?'Proportionale Zuordnung':'Antiproportionale Zuordnung';
  $('helpBtn').classList.add('hidden');
@@ -647,7 +759,7 @@ $('kCheck').onclick=()=>{
    $('vTable').querySelectorAll('input').forEach(inp=>inp.disabled=false);$('vTable').querySelectorAll('.comma-btn').forEach(b=>b.disabled=false);
    $('vFill').classList.remove('hidden');
  }else{
-   $('kFb').className='feedback bad';$('kFb').textContent='Prüfe k noch einmal.';
+   fehler();$('kFb').className='feedback bad';$('kFb').textContent='Prüfe k noch einmal.';
    $('helpBtn').classList.add('hidden');
    $('vTable').querySelectorAll('input').forEach(inp=>inp.disabled=true);$('vTable').querySelectorAll('.comma-btn').forEach(b=>b.disabled=true);
    $('vFill').classList.add('hidden');
@@ -667,7 +779,7 @@ $('vCheck').onclick=()=>{
    $('helpBtn').classList.add('hidden');
    $('vNext').classList.remove('hidden');
  }else{
-   $('vFb').className='feedback bad';$('vFb').textContent='Prüfe deine Werte noch einmal.';
+   fehler();$('vFb').className='feedback bad';$('vFb').textContent='Prüfe deine Werte noch einmal.';
    $('helpBtn').classList.remove('hidden');
  }
 };
@@ -906,7 +1018,7 @@ $('dCanvas').addEventListener('pointerdown',e=>{
 });
 $('dCheckPoints').onclick=()=>{
  if(dPlaced.length===dTask.x.length){dShowGraph=true;dDraw();$('dPointFb').className='feedback ok';$('dPointFb').textContent='Richtig – alle vier Punkte stimmen. Der Graph ist jetzt eingezeichnet.';$('dDecision').classList.remove('hidden')}
- else{$('dPointFb').className='feedback bad';$('dPointFb').textContent='Noch nicht richtig. Prüfe, ob alle vier Wertepaare eingezeichnet sind.'}
+ else{fehler();$('dPointFb').className='feedback bad';$('dPointFb').textContent='Noch nicht richtig. Prüfe, ob alle vier Wertepaare eingezeichnet sind.'}
 };
 document.querySelectorAll('input[name="dShape"]').forEach(cb=>cb.addEventListener('change',()=>{
  document.querySelectorAll('input[name="dShape"]').forEach(x=>{if(x!==cb)x.checked=false});
@@ -917,13 +1029,13 @@ $('dCheckShape').onclick=()=>{
  if(!dShapeChoice){$('dShapeFb').className='feedback bad';$('dShapeFb').textContent='Wähle zuerst eine Form aus.';return}
  const expected=dTask.type==='prop'?'line':dTask.type==='anti'?'hyperbola':'neither';
  if(dShapeChoice===expected){$('dShapeFb').className='feedback ok';$('dShapeFb').textContent='Richtig. Jetzt kannst du die Zuordnungsart bestimmen.';$('dTypeStep').classList.remove('hidden')}
- else{$('dShapeFb').className='feedback bad';$('dShapeFb').textContent='Prüfe die Form des eingezeichneten Graphen noch einmal.';$('dTypeStep').classList.add('hidden')}
+ else{fehler();$('dShapeFb').className='feedback bad';$('dShapeFb').textContent='Prüfe die Form des eingezeichneten Graphen noch einmal.';$('dTypeStep').classList.add('hidden')}
 };
 document.querySelectorAll('#dChoices .choice').forEach(b=>b.onclick=()=>{dChoice=b.dataset.v;document.querySelectorAll('#dChoices .choice').forEach(x=>x.classList.toggle('selected',x===b))});
 $('dCheckDecision').onclick=()=>{
  if(!dChoice){$('dDecisionFb').className='feedback bad';$('dDecisionFb').textContent='Wähle zuerst eine Zuordnungsart.';return}
  if(dChoice===dTask.type){if(!window._s2){window._s2=true;bumpStair(2);}$('dDecisionFb').className='feedback ok';$('dDecisionFb').textContent='Richtig.';$('dNext').classList.remove('hidden')}
- else{$('dDecisionFb').className='feedback bad';$('dDecisionFb').textContent='Prüfe deine Entscheidung noch einmal.'}
+ else{fehler();$('dDecisionFb').className='feedback bad';$('dDecisionFb').textContent='Prüfe deine Entscheidung noch einmal.'}
 };
 $('dNext').onclick=()=>{dIndex++;dRender()};
 $('subTableBtn').onclick=()=>{
@@ -1001,14 +1113,14 @@ function rload(){
 document.querySelectorAll('.rType').forEach(b=>b.onclick=()=>{rtype=b.dataset.v;document.querySelectorAll('.rType').forEach(x=>x.classList.toggle('selected',x===b))});
 $('rCheck0').onclick=()=>{
  let ok=$('rX').value===rt.x&&$('rY').value===rt.y&&rtype===rt.t;
- $('rFb0').className='feedback '+(ok?'ok':'bad');$('rFb0').textContent=ok?'Richtig. Fülle jetzt den Dreisatz vollständig aus.':'Prüfe deine Angaben noch einmal.';if(ok){$('rHX').textContent=rt.x;$('rHY').textContent=rt.y;$('rWork').classList.remove('hidden')}else $('rWork').classList.add('hidden');
+ if(!ok)fehler();$('rFb0').className='feedback '+(ok?'ok':'bad');$('rFb0').textContent=ok?'Richtig. Fülle jetzt den Dreisatz vollständig aus.':'Prüfe deine Angaben noch einmal.';if(ok){$('rHX').textContent=rt.x;$('rHY').textContent=rt.y;$('rWork').classList.remove('hidden')}else $('rWork').classList.add('hidden');
 };
 $('rCheckTable').onclick=()=>{
  const v=rt.v;
  const vals=req(rn($('r11').value),v[0])&&req(rn($('r12').value),v[1])&&req(rn($('r21').value),v[2])&&req(rn($('r22').value),v[3])&&req(rn($('r31').value),v[4])&&req(rn($('r32').value),v[5]);
  const arcs=rCalcOK(v[0],v[2],$('rL1op').value,$('rL1n').value)&&rCalcOK(v[2],v[4],$('rL2op').value,$('rL2n').value)&&rCalcOK(v[1],v[3],$('rR1op').value,$('rR1n').value)&&rCalcOK(v[3],v[5],$('rR2op').value,$('rR2n').value);
  const ok=vals&&arcs;
- $('rTableFb').className='feedback '+(ok?'ok':'bad');
+ if(!ok)fehler();$('rTableFb').className='feedback '+(ok?'ok':'bad');
  $('rTableFb').textContent=ok?'Richtig – Dreisatz vollständig gelöst.':(!vals?'Prüfe die Werte in der Tabelle noch einmal.':'Prüfe die Rechenoperationen an den Bögen noch einmal.');
  if(ok){
    if(!window._s4){window._s4=true;bumpStair(4);}
@@ -1118,7 +1230,7 @@ function qload(){
 document.querySelectorAll('.qType').forEach(b=>b.onclick=()=>{qtype=b.dataset.v;document.querySelectorAll('.qType').forEach(x=>x.classList.toggle('selected',x===b))});
 $('qCheck0').onclick=()=>{
  const ok=$('qX').value===qt.x&&$('qY').value===qt.y&&qtype===qt.t;
- $('qFb0').className='feedback '+(ok?'ok':'bad');
+ if(!ok)fehler();$('qFb0').className='feedback '+(ok?'ok':'bad');
  $('qFb0').textContent=ok?'Richtig.':'Prüfe deine Angaben noch einmal.';
  if(ok){$('qWork').classList.remove('hidden');qRender()}else $('qWork').classList.add('hidden');
 };
@@ -1176,7 +1288,7 @@ $('qCheck').onclick=()=>{
    equationOK=xOK&&knownOK&&qFlipped;
  }
  const ok=equationOK&&resultOK;
- $('qFb').className='feedback '+(ok?'ok':'bad');
+ if(!ok)fehler();$('qFb').className='feedback '+(ok?'ok':'bad');
  $('qFb').textContent=ok
    ?'Richtig.'
    :(equationOK&&!resultOK
@@ -1209,7 +1321,7 @@ const STAIRS=[
 const STAIR_GOAL=5;
 function stairKey(){return 'zuordnungen-treppe';}
 function stairCounts(){try{return JSON.parse(localStorage.getItem(stairKey())||'{}')||{};}catch(e){return {};}}
-function bumpStair(n){const c=stairCounts();c[n]=(c[n]||0)+1;try{localStorage.setItem(stairKey(),JSON.stringify(c));}catch(e){}renderStairs();}
+function bumpStair(n){if(window.geloest)window.geloest(n);}
 function currentStair(){
  if($('mode1Btn').classList.contains('active'))return $('subDiagramBtn').classList.contains('active')?2:1;
  if($('mode2Btn').classList.contains('active'))return 3;
@@ -1217,7 +1329,7 @@ function currentStair(){
  if($('mode4Btn').classList.contains('active'))return 5;
  return 1;
 }
-function renderStairs(){
+function renderStairs(){return;
  const c=stairCounts(),cur=currentStair(),box=$('stairs');box.innerHTML='';
  STAIRS.forEach((s,k)=>{
    const n=c[s.n]||0,done=n>=STAIR_GOAL,b=document.createElement('button');
@@ -1231,5 +1343,164 @@ function renderStairs(){
 renderStairs();
 
 </script>
+
+<script>
+/* ================= Levelspiel ================= */
+(function(){
+const KEY="zuordnungen-levelspiel-v1", CODE="EPS2026", RUNDE=5, KORR_ERLAUBT=2, BONUS_PRO_CREDIT=5;
+const SPIELE={
+ "1-1":{name:"aus der Wertetabelle",sec:"trainer"},
+ "1-2":{name:"aus dem Diagramm",sec:"diagramTrainer"},
+ "2-1":{name:"proportional",sec:"valueTrainer",typ:"prop"},
+ "2-2":{name:"antiproportional",sec:"valueTrainer",typ:"anti"},
+ "3-1":{name:"Dreisatz",sec:"ruleThreeTrainer"},
+ "3-2":{name:"Verhältnisgleichung",sec:"ratioTrainer"}};
+const LEVELS=[{nr:1,name:"Zuordnungen erkennen",spiele:["1-1","1-2"]},{nr:2,name:"Wertetabellen ergänzen",spiele:["2-1","2-2"]},{nr:3,name:"Sachaufgaben lösen",spiele:["3-1","3-2"]}];
+const ALLE=Object.keys(SPIELE);
+const SECS=["trainer","valueTrainer","diagramTrainer","ruleThreeTrainer","ratioTrainer"];
+const g=id=>document.getElementById(id);
+let S={stars:{},bonus:{},topf:0,credits:0,lehrer:false};
+try{const r=localStorage.getItem(KEY);if(r)S=Object.assign(S,JSON.parse(r));}catch(e){}
+S.stars=S.stars||{};S.bonus=S.bonus||{};
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}};
+const stars=id=>S.stars[id]||0;
+const summe=()=>Object.values(S.stars).reduce((a,b)=>a+b,0);
+const bossOffen=()=>S.lehrer||ALLE.every(id=>stars(id)>=1);
+const ruhig=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
+const STERN=v=>v?'<svg><use href="#st" fill="url(#gold)" stroke="#b86e00" stroke-width="1.2"/></svg>':'<svg><use href="#st" fill="rgba(255,255,255,.12)" stroke="rgba(255,255,255,.5)" stroke-width="1.2"/></svg>';
+const STERN_K=v=>v?'<svg><use href="#st" fill="url(#gold)" stroke="#b86e00" stroke-width="1"/></svg>':'<svg><use href="#st" fill="#eef0f2" stroke="#b9c6c9" stroke-width="1"/></svg>';
+const reihe=(n,f=STERN)=>[0,1,2].map(i=>f(i<n)).join("");
+const main=document.querySelector("main"), bar=g("lsBar"), home=g("lsHome"), endeBox=g("lsEnde");
+const weiterBox=document.createElement("div");weiterBox.className="lsWeiter hidden";main.after(weiterBox);
+function zaehler(){g("lsSterne").textContent=summe();g("lsCredits").textContent=S.credits;g("lsCreditWort").textContent=S.credits===1?"Credit":"Credits";}
+
+/* ---------- Startseite ---------- */
+let lehrerMsg="";
+function zeigeHome(){
+  R=null;document.body.classList.remove("g0","g1","g2");
+  main.classList.add("hidden");bar.classList.add("hidden");endeBox.classList.add("hidden");weiterBox.classList.add("hidden");home.classList.remove("hidden");
+  zaehler();
+  const empf=ALLE.find(id=>stars(id)===0);
+  let h=`<p class="lsSub">Alle Spiele sind offen. Löse eine Runde mit ${RUNDE} Aufgaben und höchstens ${KORR_ERLAUBT} Korrekturen, dann bekommst du einen Stern. Mit jedem Stern werden die Aufgaben schwerer. Hast du drei Sterne, gibt es Bonussterne, und ${BONUS_PRO_CREDIT} Bonussterne ergeben einen Credit.</p><div class="lsLevels">`;
+  for(const L of LEVELS){
+    const hat=L.spiele.reduce((a,id)=>a+stars(id),0), alle=L.spiele.every(id=>stars(id)>=1);
+    h+=`<section class="lsLv${alle?" voll":""}"><div class="lsBadge">${L.nr}</div><div class="lsKopf"><div><div class="lsTag">LEVEL ${L.nr}</div><h2>${L.name}</h2></div><div class="lsZahl">${STERN(true)} ${hat} von ${L.spiele.length*3} Sternen</div></div>
+      <div class="lsBahn"><div class="lsLinie"><i style="width:${alle?100:0}%"></i></div>`;
+    for(const id of L.spiele){const st=stars(id),b=S.bonus[id]||0,cls=st>=1?"fertig":id===empf?"jetzt":"offen";
+      h+=`<div class="lsNode ${cls}"><button class="lsKreis" data-spiel="${id}" aria-label="Spiel ${id} ${SPIELE[id].name}">${id}</button><b>${SPIELE[id].name}</b>
+        ${st>=1?`<div class="lsSterne">${reihe(st)}${b?`<span class="lsBonus">+${b} Bonus</span>`:""}</div>`:`<button class="lsBtn${cls==="jetzt"?"":" hell"}" data-spiel="${id}">▶ Spielen</button>`}</div>`;}
+    h+=`</div></section>`;
+  }
+  const bo=bossOffen();
+  h+=`<section class="lsLv lsBoss ${bo?"offen":"zu"}"><div class="lsBadge">${bo?"⚔":"🔒"}</div><div class="lsKopf"><div><div class="lsTag">FINALE</div><h2>Endgegner</h2><div class="lsKlein">Aufgaben aus allen Leveln</div></div>
+    ${bo?`<div class="lsZahl">${STERN(true)} ${stars("boss")} von 3 Sternen</div>`:`<div class="lsKlein">erscheint, wenn jedes Spiel mindestens einen Stern hat</div>`}</div>
+    ${bo?`<div class="lsBossRow"><div class="lsSterne">${reihe(stars("boss"))}${S.bonus.boss?`<span class="lsBonus">+${S.bonus.boss} Bonus</span>`:""}</div><button class="lsBtn gold" data-spiel="boss">⚔ Kämpfen</button></div>`:""}</section></div>
+    <details class="lsLehrer"${lehrerMsg?" open":""}><summary>Für die Lehrkraft</summary><div class="lsLehrerRow">
+    <input type="text" id="lsCode" placeholder="Lehrer-Code" autocomplete="off" aria-label="Lehrer-Code"><button class="lsBtn hell" id="lsCodeBtn">Endgegner freischalten</button>
+    <span id="lsResetBox"><button class="lsBtn hell" id="lsReset">Fortschritt löschen</button></span><span>${lehrerMsg}</span></div></details>`;
+  home.innerHTML=h;
+  home.querySelectorAll("[data-spiel]").forEach(b=>b.addEventListener("click",()=>start(b.dataset.spiel)));
+  g("lsCodeBtn").addEventListener("click",()=>{if(g("lsCode").value.trim().toUpperCase()===CODE){S.lehrer=true;save();lehrerMsg="Der Endgegner ist freigeschaltet.";}else lehrerMsg="Der Code stimmt nicht.";zeigeHome();});
+  g("lsReset").addEventListener("click",()=>{g("lsResetBox").innerHTML=`Wirklich alles löschen? <button class="lsBtn hell" id="lsJa">Ja</button> <button class="lsBtn hell" id="lsNein">Nein</button>`;
+    g("lsJa").addEventListener("click",()=>{S={stars:{},bonus:{},topf:0,credits:0,lehrer:false};save();lehrerMsg="Der Fortschritt wurde gelöscht.";zeigeHome();});
+    g("lsNein").addEventListener("click",zeigeHome);});
+  window.scrollTo({top:0});
+}
+
+/* ---------- Aufgaben laden (nutzt die vorhandenen Module) ---------- */
+let R=null;
+function lade(id,neu){
+  SECS.forEach(s=>g(s).classList.add("hidden"));
+  g(SPIELE[id].sec).classList.remove("hidden");
+  if(id==="1-1"){if(neu||i+1>=order.length){order=levelPool(tasks,"recognize").sort(()=>Math.random()-.5);i=0;}else i++;render();}
+  else if(id==="1-2"){if(neu){dShuffle();}else dIndex++;dRender();}
+  else if(id==="2-1"||id==="2-2"){window.VTYP=SPIELE[id].typ;if(neu)shuffleValueTasks();else vi++;renderValueTask();}
+  else if(id==="3-1"){if(neu){rq=[];ri=0;}else ri++;rload();}
+  else if(id==="3-2"){if(neu){qq=[];qi=0;}else qi++;qload();}
+}
+function start(id){
+  const lv=Math.min(2,stars(id)), boss=id==="boss";
+  R={id,lv:boss?2:lv,boss,geloest:0,korr:0,warte:false,spiel:null,geladen:new Set()};
+  document.body.classList.remove("g0","g1","g2");document.body.classList.add("g"+R.lv);
+  schoolLevel=R.lv>=1?"regular":"support";
+  home.classList.add("hidden");endeBox.classList.add("hidden");main.classList.remove("hidden");bar.classList.remove("hidden");
+  naechste();
+}
+function naechste(){
+  let id=R.id;
+  if(R.boss){const pool=ALLE.filter(x=>x!==R.spiel);id=pool[Math.floor(Math.random()*pool.length)];}
+  R.spiel=id;const neu=!R.geladen.has(id);R.geladen.add(id);
+  lade(id,neu);zeigeBar();weiterBox.classList.add("hidden");window.scrollTo({top:0});
+}
+function zeigeBar(){
+  const titel=R.boss?`Endgegner · Spiel ${R.spiel} ${SPIELE[R.spiel].name}`:`Spiel ${R.id} · ${SPIELE[R.id].name}`;
+  const dots=Array.from({length:RUNDE},(_,k)=>`<span class="lsDot ${k<R.geloest?"ok":k===R.geloest?"now":""}"></span>`).join("");
+  bar.innerHTML=`<span class="lsTitel">${titel}<small>Schwierigkeit ${"★".repeat(R.lv+1)} · ${R.lv===0?"mit allen Hilfen":R.lv===1?"schwierigere Zahlen":"schwierigere Zahlen, ohne Hilfe-Knopf"}</small></span>
+    <span class="lsDots" aria-label="Gelöste Aufgaben">${dots}</span>
+    <span class="lsKorr${R.korr>KORR_ERLAUBT?" zuviel":""}">Korrekturen: ${R.korr} (erlaubt: ${KORR_ERLAUBT})</span>
+    <button class="lsBtn hell" id="lsAbbr">Zur Übersicht</button>`;
+  g("lsAbbr").addEventListener("click",zeigeHome);
+}
+window.fehler=function(){if(!R||R.warte)return;R.korr++;zeigeBar();};
+window.geloest=function(){
+  if(!R||R.warte)return;R.warte=true;R.geloest++;zeigeBar();
+  const letzte=R.geloest>=RUNDE;
+  weiterBox.innerHTML=`<button class="lsBtn" id="lsWeiterBtn">${letzte?"Zum Ergebnis ▶":"Nächste Aufgabe ▶"}</button>`;
+  weiterBox.classList.remove("hidden");
+  g("lsWeiterBtn").addEventListener("click",()=>{if(!R||R.fertig)return;weiterBox.innerHTML="";weiterBox.classList.add("hidden");R.warte=false;if(letzte){R.fertig=true;ende();}else naechste();},{once:true});
+  setTimeout(()=>weiterBox.scrollIntoView({behavior:ruhig?"auto":"smooth",block:"center"}),150);
+};
+
+/* ---------- Ergebnis ---------- */
+function ende(){
+  const id=R.id, geschafft=R.korr<=KORR_ERLAUBT, altSumme=summe(), altCredits=S.credits, bossVorher=bossOffen();
+  let neuStern=false,bonus=false,neuerCredit=false;
+  if(geschafft&&stars(id)<3){S.stars[id]=stars(id)+1;neuStern=true;}
+  else if(geschafft){S.bonus[id]=(S.bonus[id]||0)+1;S.topf=(S.topf||0)+1;bonus=true;if(S.topf>=BONUS_PRO_CREDIT){S.topf-=BONUS_PRO_CREDIT;S.credits++;neuerCredit=true;}}
+  save();
+  const neuBoss=!bossVorher&&bossOffen(), st=stars(id);
+  let txt;
+  if(geschafft)txt=neuStern?(R.korr?`Geschafft mit ${R.korr} ${R.korr===1?"Korrektur":"Korrekturen"}! Du bekommst einen Stern.`:"Ohne Korrektur geschafft! Du bekommst einen Stern."):(neuerCredit?"Bonusstern! Fünf Bonussterne sind voll: Du bekommst einen Credit!":"Bonusstern! Sammle weiter für den nächsten Credit.");
+  else txt=`Du hast ${R.korr} Korrekturen gebraucht. Mit höchstens ${KORR_ERLAUBT} Korrekturen bekommst du einen Stern. Versuch es gleich noch einmal!`;
+  main.classList.add("hidden");weiterBox.classList.add("hidden");endeBox.classList.remove("hidden");
+  endeBox.innerHTML=`<div class="lsErg"><div class="lsGross" id="lsGross">${reihe(neuStern?st-1:st,STERN_K)}</div><p>${txt}</p>
+    ${bonus?`<div class="lsTopf">${neuerCredit?"":Array.from({length:BONUS_PRO_CREDIT},(_,k)=>`<i class="${k<S.topf?"voll":""}"></i>`).join("")}<svg viewBox="0 0 300 300"><use href="#credit"/></svg></div>`:""}
+    ${neuBoss?`<div class="lsBanner">⚔ Der Endgegner ist erschienen!</div>`:""}
+    <div class="lsRow"><button class="lsBtn" id="lsNoch">${neuStern&&st<3?"Nächste Runde (schwerer) ▶":"Noch eine Runde ▶"}</button><button class="lsBtn grau" id="lsHeim">Zur Übersicht</button></div></div>`;
+  g("lsNoch").addEventListener("click",()=>start(id));g("lsHeim").addEventListener("click",zeigeHome);
+  g("lsSterne").textContent=altSumme;g("lsCredits").textContent=altCredits;
+  bar.querySelector(".lsDots")&&(bar.querySelector(".lsDots").innerHTML=Array.from({length:RUNDE},()=>'<span class="lsDot ok"></span>').join(""));
+  window.scrollTo({top:0});
+  if(neuStern)sternFlug(()=>{g("lsGross").innerHTML=reihe(st,STERN_K);g("lsSterne").textContent=summe();puls("lsSternPill");});
+  if(neuerCredit)creditFlug(()=>{zaehler();puls("lsCreditPill");});
+}
+function puls(id){const p=g(id);p.classList.add("puls");setTimeout(()=>p.classList.remove("puls"),450);}
+function glitzer(n,delay){for(let k=0;k<n;k++){const d=document.createElement("div");d.className="lsGlitzer";d.style.left="50%";d.style.top="45%";document.body.appendChild(d);
+  const w=k/n*Math.PI*2,r=120+Math.random()*110;
+  d.animate([{transform:"translate(-50%,-50%) scale(1)",opacity:1},{transform:`translate(calc(-50% + ${Math.cos(w)*r}px),calc(-50% + ${Math.sin(w)*r}px)) scale(.2)`,opacity:0}],{duration:950,delay,easing:"cubic-bezier(.2,.7,.3,1)"}).onfinish=()=>d.remove();}}
+function zielFlug(el,ziel,fertig){
+  const z=g(ziel).getBoundingClientRect(),b=el.getBoundingClientRect();
+  const dx=z.left+z.width*0.18-(b.left+b.width/2),dy=z.top+z.height/2-(b.top+b.height/2);
+  el.animate([{transform:"translate(0,0) scale(1)"},{transform:`translate(${dx}px,${dy}px) scale(.16)`}],{duration:850,easing:"cubic-bezier(.5,0,.2,1)",fill:"forwards"}).onfinish=()=>{el.remove();fertig();};
+}
+function sternFlug(fertig){
+  if(ruhig||!document.body.animate){fertig();return;}
+  const s=document.createElementNS("http://www.w3.org/2000/svg","svg");s.setAttribute("class","lsFlug");s.setAttribute("viewBox","0 0 24 24");
+  s.innerHTML='<use href="#st" fill="url(#gold)" stroke="#fff6c8" stroke-width=".6"/>';document.body.appendChild(s);glitzer(18,250);
+  s.animate([{transform:"scale(0) rotate(-180deg)",opacity:0},{transform:"scale(1.35) rotate(20deg)",opacity:1,offset:.6},{transform:"scale(1) rotate(0deg)",opacity:1}],{duration:800,easing:"ease-out",fill:"forwards"})
+   .onfinish=()=>setTimeout(()=>zielFlug(s,"lsSternPill",fertig),350);
+}
+function creditFlug(fertig){
+  if(ruhig||!document.body.animate){fertig();return;}
+  const box=document.createElement("div");box.className="lsMflug";box.innerHTML='<svg viewBox="0 0 300 300"><use href="#credit"/></svg>';document.body.appendChild(box);glitzer(22,300);
+  box.animate([{transform:"translateY(-60vh) scale(.4)"},{transform:"translateY(0) scale(1.15)",offset:.75},{transform:"translateY(0) scale(1)"}],{duration:700,easing:"cubic-bezier(.3,1.4,.5,1)",fill:"forwards"});
+  box.firstChild.animate([{transform:"rotateY(0deg)"},{transform:"rotateY(1080deg)"}],{duration:1700,easing:"cubic-bezier(.2,.6,.3,1)",fill:"forwards"})
+   .onfinish=()=>setTimeout(()=>zielFlug(box,"lsCreditPill",fertig),250);
+}
+zeigeHome();
+})();
+
+</script>
+
 </body>
 </html>
